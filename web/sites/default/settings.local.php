@@ -1,9 +1,9 @@
 <?php
 
 $databases['default']['default'] = array(
-  'database' => 'pendeedus',
-  'username' => 'pendeedus',
-  'password' => 'v*Kj01qbvC@D33NE',
+  'database' => 'admin_pendeedus',
+  'username' => 'admin_pendeedus',
+  'password' => 'TvplOKR3oQKzq6IW',
   'prefix' => '',
   'host' => '127.0.0.1',
   'port' => '3306',

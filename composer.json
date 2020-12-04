@@ -28,6 +28,7 @@
         "drupal/block_class": "^1.2",
         "drupal/bootstrap_paragraphs": "^2.0@beta",
         "drupal/bootstrap_sass": "^1.9",
+        "drupal/coffee": "^1.0",
         "drupal/conditional_fields": "^1.0@alpha",
         "drupal/console": "~1.0",
         "drupal/context": "^4.0@beta",
