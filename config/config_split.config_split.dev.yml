@@ -1,0 +1,20 @@
+uuid: 96e40a0e-fe6a-4b2d-8e4f-71912058f2b1
+langcode: en
+status: true
+dependencies: {  }
+id: dev
+label: Dev
+description: 'dev configuration'
+folder: config/dev
+module:
+  coffee: 0
+  devel: 0
+  devel_php: 0
+  kint: 0
+  maillog: 0
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true
+weight: 0

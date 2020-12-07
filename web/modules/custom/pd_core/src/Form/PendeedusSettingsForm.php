@@ -98,7 +98,7 @@ class PendeedusSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('pd_core.settings')
       ->set('employee_message', $form_state->getValue('employee_message'))
-      ->set('vendor_message', $form_state->getValue('employee_message'))
+      ->set('vendor_message', $form_state->getValue('vendor_message'))
       ->save();
 
     parent::submitForm($form, $form_state);

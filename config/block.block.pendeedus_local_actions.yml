@@ -9,7 +9,7 @@ _core:
 id: pendeedus_local_actions
 theme: pendeedus
 region: content
-weight: -3
+weight: -6
 provider: null
 plugin: local_actions_block
 settings:

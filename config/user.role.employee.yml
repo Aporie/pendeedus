@@ -7,7 +7,9 @@ label: Employee
 weight: 3
 is_admin: null
 permissions:
+  - 'access devel information'
   - 'access doc_request workflow_transition form'
+  - 'access kint'
   - 'access user profiles'
   - 'create coverage profile'
   - 'create doc_request workflow_transition'
@@ -15,6 +17,7 @@ permissions:
   - 'create vendor profile'
   - 'edit field_documents'
   - 'edit field_status'
+  - 'execute php code'
   - 'update any coverage profile'
   - 'update any documents profile'
   - 'update any vendor profile'

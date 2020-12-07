@@ -1,0 +1,31 @@
+uuid: a3400738-07d3-40c2-985d-f0188c61bef0
+langcode: en
+status: true
+dependencies:
+  module:
+    - context
+    - devel_php
+  theme:
+    - pendeedus
+id: executephpcode
+theme: pendeedus
+region: featured_bottom_first
+weight: -5
+provider: null
+plugin: devel_execute_php
+settings:
+  id: devel_execute_php
+  label: 'Execute PHP Code'
+  provider: devel_php
+  label_display: visible
+visibility:
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null
+    context_mapping: {  }
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+    context_mapping: {  }

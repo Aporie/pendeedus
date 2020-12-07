@@ -10,4 +10,6 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
+  - 'access devel information'
+  - 'access kint'
   - 'create vendor profile'

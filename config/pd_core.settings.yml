@@ -1,0 +1,6 @@
+employee_message:
+  value: 'Here is the message for employee'
+  format: full_html
+vendor_message:
+  value: 'Here is the message for employee. <strong>And with html ?</strong>'
+  format: full_html

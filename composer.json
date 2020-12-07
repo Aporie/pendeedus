@@ -30,6 +30,7 @@
         "drupal/bootstrap_sass": "^1.9",
         "drupal/coffee": "^1.0",
         "drupal/conditional_fields": "^1.0@alpha",
+        "drupal/config_split": "^1.7",
         "drupal/console": "~1.0",
         "drupal/context": "^4.0@beta",
         "drupal/core-composer-scaffold": "^8.8",
@@ -49,6 +50,7 @@
         "drupal/hierarchical_term_formatter": "^1.2",
         "drupal/inline_entity_form": "^1.0@RC",
         "drupal/layout_paragraphs": "^1.0@beta",
+        "drupal/maillog": "^1.0@beta",
         "drupal/markup": "^1.0@beta",
         "drupal/menu_link_content_visibility": "^1.2",
         "drupal/menu_token": "1.x-dev",
@@ -68,8 +70,7 @@
         "drupal/views_entity_form_field": "^1.0@beta",
         "drupal/views_show_more": "^1.0",
         "drupal/workflow": "^1.4",
-        "drush/drush": "^9",
-        "xenomedia/xeno_hero": "dev-master"
+        "drush/drush": "^9"
     },
     "conflict": {
         "drupal/drupal": "*"

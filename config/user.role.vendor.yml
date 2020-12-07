@@ -7,7 +7,9 @@ label: Vendor
 weight: 2
 is_admin: null
 permissions:
+  - 'access devel information'
   - 'access doc_request workflow_transition form'
+  - 'access kint'
   - 'create area_coverage entities'
   - 'create coverage profile'
   - 'create coverage_item entities'
@@ -16,6 +18,7 @@ permissions:
   - 'create documents profile'
   - 'edit own area_coverage entities'
   - 'edit own coverage_item entities'
+  - 'execute php code'
   - 'manage coverage'
   - 'update own coverage profile'
   - 'update own documents profile'

@@ -10,7 +10,7 @@ dependencies:
 id: sitebranding
 theme: pendeedus
 region: footer_first
-weight: 0
+weight: -5
 provider: null
 plugin: system_branding_block
 settings:

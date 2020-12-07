@@ -1,0 +1,14 @@
+name: 'Hierarchical Term Formatter Test'
+type: module
+description: 'Supports Hierarchical Term Formatter functional tests'
+package: Testing
+dependencies:
+  - drupal:node
+  - drupal:taxonomy
+  - drupal:user
+  - drupal:hierarchical_term_formatter
+
+# Information added by Drupal.org packaging script on 2020-05-24
+version: '8.x-1.2'
+project: 'hierarchical_term_formatter'
+datestamp: 1590292345

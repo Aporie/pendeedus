@@ -7,6 +7,8 @@ module:
   block_class: 0
   bootstrap_paragraphs: 0
   breakpoint: 0
+  config_filter: 0
+  config_split: 0
   context: 0
   context_ui: 0
   contextual: 0
@@ -14,8 +16,6 @@ module:
   dblog: 0
   default_content: 0
   default_content_deploy: 0
-  devel: 0
-  devel_php: 0
   dynamic_page_cache: 0
   eck: 0
   email_registration: 0
@@ -37,7 +37,6 @@ module:
   layout_discovery: 0
   layout_paragraphs: 0
   link: 0
-  maillog: 0
   markup: 0
   menu_link_content: 0
   menu_link_content_visibility: 0
@@ -50,6 +49,7 @@ module:
   page_cache: 0
   path: 0
   path_alias: 0
+  pd_core: 0
   pd_coverage: 0
   pd_request: 0
   pd_vendor: 0
@@ -74,7 +74,6 @@ module:
   viewsreference: 0
   workflow: 0
   workflow_ui: 0
-  xeno_hero: 0
   pathauto: 1
   views: 10
   paragraphs: 11
