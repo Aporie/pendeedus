@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: numbers
-vid: numbers
-description: 'A short list of numbers'
-hierarchy: 1
-weight: 0

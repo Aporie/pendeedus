@@ -1,7 +1,19 @@
+body.path-frontpage {
+  overflow-x: hidden;
+}
 .node {
   &.node--home {
     .paragraph--type--xeno-hero {
       justify-content: space-around;
+      padding-left: 0;
+      padding-right: 0;
+      & > .paragraph__column {
+        padding-left: 0;
+        padding-right: 0;
+        .field--type-image {
+          margin: 0;
+        }
+      }
       h1 {
         font-size: 4em;
         margin-bottom: 0.25em;
@@ -13,6 +25,12 @@
           padding-right: 15ex;
           margin-top: 300px;
         }
+      }
+      .paragraph--type--bp-simple {
+        position: absolute;
+        top: 300px;
+        left: 40px;
+        color: #fff;
       }
     }
   }

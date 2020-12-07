@@ -4522,8 +4522,8 @@
                     "version": "8.x-1.2",
                     "datestamp": "1559638085",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -4532,6 +4532,10 @@
                 "GPL-2.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "aspilicious",
+                    "homepage": "https://www.drupal.org/user/172527"
+                },
                 {
                     "name": "luisortizramos",
                     "homepage": "https://www.drupal.org/user/347601"

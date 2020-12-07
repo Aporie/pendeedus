@@ -1,0 +1,5 @@
+pd_core.settings:
+  title: Pendeedus
+  description: 'Administer Pendeedus'
+  route_name: pd_core.settings
+  parent: system.admin_config

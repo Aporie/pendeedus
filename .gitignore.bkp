@@ -1,0 +1,7 @@
+# Ignores Vscode files
+.workspace*
+.vscode
+
+# Ignore drupal files.
+modules/contrib
+web/sites/default/files

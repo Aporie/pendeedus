@@ -1,0 +1,6 @@
+name: PENDEEDUS Core
+description: Core functionalities for pendeedus.
+type: module
+package: Custom
+core: 8.x
+

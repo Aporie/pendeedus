@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - node
-id: node.all
-label: all
-targetEntityType: node
-cache: true

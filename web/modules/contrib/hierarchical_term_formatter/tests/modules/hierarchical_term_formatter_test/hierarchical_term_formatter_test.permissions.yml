@@ -1,4 +1,0 @@
-preview node view modes:
-  title: 'Peview nodes in a given view mode'
-  description: 'Allows users to preview an entity in a given view mode.'
-  restrict access: TRUE

@@ -1,0 +1,9 @@
+pd_core.settings:
+  path: '/admin/pendeedus/settings'
+  defaults:
+    _form: '\Drupal\pd_core\Form\PendeedusSettingsForm'
+    _title: 'Pendeedus settings'
+    link_id: 'pd_core.settings'
+  requirements:
+    _permission: 'administer pendeedus settings'
+
