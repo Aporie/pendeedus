@@ -1,6 +1,14 @@
-nodejs:
+requests:
+  version: VERSION
   js:
-    pd_request.nodejs.js: { }
+    js/requests.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+documents:
+  version: VERSION
+  js:
+    js/documents.js: {}
   dependencies:
     - core/jquery
     - core/drupalSettings

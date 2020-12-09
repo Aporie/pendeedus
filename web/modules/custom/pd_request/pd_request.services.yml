@@ -3,3 +3,9 @@ services:
     class: Drupal\pd_request\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+  pd_request.request_manager:
+    class: Drupal\pd_request\RequestManager
+    arguments: ['@entity_type.manager', '@current_user', '@renderer']
+    tags:
+      - { name: pd_request_manager }
+

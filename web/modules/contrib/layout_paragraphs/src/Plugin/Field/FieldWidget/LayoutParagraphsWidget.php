@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\Renderer;
+use Drupal\field_group\FormatterHelper;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -34,11 +35,16 @@ use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\paragraphs\ParagraphsTypeInterface;
 use Drupal\layout_paragraphs\Ajax\LayoutParagraphsStateResetCommand;
 use Drupal\layout_paragraphs\Ajax\LayoutParagraphsInsertCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\inline_entity_form\ElementSubmit;
+use Drupal\inline_entity_form\WidgetSubmit;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Entity Reference with Layout field widget.
@@ -306,10 +312,20 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
           $this->wrapperId . '--item-' . $delta,
         ],
       ],
+      '_weight' => [
+        '#type' => 'hidden',
+        '#default_value' => $weight,
+        '#weight' => -1000,
+        '#attributes' => [
+          'class' => ['layout-paragraphs-weight'],
+        ],
+      ],
       'preview' => $preview,
       'region' => [
         '#type' => 'hidden',
-        '#attributes' => ['class' => ['layout-paragraphs-region']],
+        '#attributes' => [
+          'class' => ['layout-paragraphs-region'],
+        ],
         '#default_value' => $region,
       ],
       // Used by DOM to set parent uuids for nested items.
@@ -329,7 +345,6 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         '#type' => 'value',
         '#value' => $entity,
       ],
-      'toggle_button' => $this->allowReferenceChanges() ? $this->toggleButton('layout-paragraphs-parent-uuid') : [],
       // Edit and remove button.
       'actions' => [
         '#type' => 'container',
@@ -393,9 +408,12 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             'class' => [
               'layout-paragraphs-layout-region',
               'layout-paragraphs-layout-region--' . $region_name,
+              $entity->uuid() . '-layout-region--' . $region_name,
+            ],
+            'id' => [
+              $this->wrapperId . '--item-' . $delta . '-' . $region_name,
             ],
           ],
-          'toggle_button' => $this->allowReferenceChanges() ? $this->toggleButton('layout-paragraphs-uuid') : [],
         ];
       }
     }
@@ -560,37 +578,21 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       }
     }
     static::setWidgetState($parents, $this->fieldName, $form_state, $widget_state);
-    $elements = parent::formMultipleElements($items, $form, $form_state);
-    unset($elements['#theme']);
-    $elements['#parents'] = $form['#parents'];
-    $paragraph_items_count = 0;
-    foreach (Element::children($elements) as $index) {
-      $element =& $elements[$index];
-      if (isset($element['_weight'])) {
-        $element['_weight']['#wrapper_attributes']['class'] = ['hidden'];
-        $element['_weight']['#attributes']['class'] = ['layout-paragraphs-weight'];
-        // Move to top of container to ensure items are given the correct delta.
-        $element['_weight']['#weight'] = -1000;
-      }
-      if (isset($element['#entity'])) {
-        $paragraph_items_count++;
-      }
-    }
-    $elements['#after_build'][] = [$this, 'buildLayouts'];
 
-    if (isset($elements['#prefix'])) {
-      unset($elements['#prefix']);
-    }
-    if (isset($elements['#suffix'])) {
-      unset($elements['#suffix']);
-    }
-    $elements += [
+    $elements = [
+      '#field_name' => $this->fieldName,
+      '#required' => $this->fieldDefinition->isRequired(),
       '#title' => $title,
       '#description' => $description,
       '#attributes' => ['class' => ['layout-paragraphs-field']],
       '#type' => 'fieldset',
+      '#parents' => $form['#parents'],
+      '#id' => $this->wrapperId,
     ];
-    $elements['#id'] = $this->wrapperId;
+    for ($delta = 0; $delta < $widget_state['items_count']; $delta++) {
+      $elements[$delta] = $this->formSingleElement($items, $delta, [], $form, $form_state);
+    }
+    $elements['#after_build'][] = [$this, 'buildLayouts'];
 
     // Add logic for new elements Add, if not in a translation context.
     if ($this->allowReferenceChanges()) {
@@ -617,16 +619,15 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
 
         $path = '';
         // Get the icon and pass to Javascript.
-        if (method_exists($type, 'getIconFile')) {
-          if ($icon = $type->getIconFile()) {
-            $path = $icon->url();
-          }
+        if (method_exists($type, 'getIconUrl')) {
+          $path = $type->getIconUrl();
         }
         $options[$bundle_id] = $bundle_info[$bundle_id]['label'];
         $types[($has_layout ? 'layout' : 'content')][] = [
           'id' => $bundle_id,
           'name' => $bundle_info[$bundle_id]['label'],
           'image' => $path,
+          'title' => $this->t('Create new @name', ['@name' => $bundle_info[$bundle_id]['label']]),
         ];
       }
       $elements['add_more']['actions']['type'] = [
@@ -640,6 +641,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         '#host' => $items->getEntity(),
         '#value' => $this->t('Create New'),
         '#submit' => [[$this, 'newItemSubmit']],
+        '#element_validate' => [[$this, 'newItemValidate']],
         '#limit_validation_errors' => [array_merge($parents, [
           $this->fieldName,
           'add_more',
@@ -652,19 +654,17 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         '#name' => trim(implode('_', $parents) . '_' . $this->fieldName . '_add_item', '_'),
         '#element_parents' => $parents,
       ];
-      // Add region and parent_delta hidden items only in this is a new entity.
-      // Prefix with underscore to prevent namespace collisions.
-      $elements['add_more']['actions']['_region'] = [
+      // When adding a new element, the widget needs a way to track
+      // (a) where in the DOM the new element should be added, and
+      // (b) which method to use the insert the new element
+      // (i.e. before, after, append).
+      $elements['add_more']['actions']['dom_id'] = [
         '#type' => 'hidden',
-        '#attributes' => ['class' => ['layout-paragraphs-new-item-region']],
+        '#attributes' => ['class' => ['dom-id']],
       ];
-      $elements['add_more']['actions']['_new_item_weight'] = [
+      $elements['add_more']['actions']['insert_method'] = [
         '#type' => 'hidden',
-        '#attributes' => ['class' => ['layout-paragraphs-new-item-weight']],
-      ];
-      $elements['add_more']['actions']['_parent_uuid'] = [
-        '#type' => 'hidden',
-        '#attributes' => ['class' => ['layout-paragraphs-new-item-parent-uuid']],
+        '#attributes' => ['class' => ['insert-method']],
       ];
       // Template for javascript behaviors.
       $elements['add_more']['menu'] = [
@@ -681,7 +681,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             {% endif %}
             {% for type in types.layout %}
               <div class="layout-paragraphs-add-more-menu__item paragraph-type-{{type.id}} layout-paragraph">
-                <a data-type="{{ type.id }}" href="#{{ type.id }}">
+                <a data-type="{{ type.id }}" href="#{{ type.id }}" title="{{ type.title }}">
                 {% if type.image %}
                 <img src="{{ type.image }}" alt ="" />
                 {% endif %}
@@ -697,7 +697,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             {% endif %}
             {% for type in types.content %}
               <div class="layout-paragraphs-add-more-menu__item paragraph-type-{{type.id}}">
-                <a data-type="{{ type.id }}" href="#{{ type.id }}">
+                <a data-type="{{ type.id }}" href="#{{ type.id }}" title="{{ type.title }}">
                 {% if type.image %}
                 <img src="{{ type.image }}" alt ="" />
                 {% endif %}
@@ -715,7 +715,6 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
           'search_text' => $this->t('Search'),
         ],
       ];
-      $elements['toggle_button'] = $this->toggleButton();
     }
     else {
       // Add the #isTranslating attribute, if in a translation context.
@@ -735,6 +734,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       ];
     }
 
+    // Add the paragraph edit form if editing.
     if ($widget_state['open_form'] !== FALSE) {
       $this->entityForm($elements, $form_state, $form);
     }
@@ -750,6 +750,9 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       '#attributes' => ['class' => ['layout-paragraphs-disabled-items']],
       '#weight' => 999,
       '#title' => $this->t('Disabled Items'),
+      'description' => [
+        '#markup' => '<div class="layout-paragraphs-disabled-items__description">' . $this->t('Drop items here that you want to keep disabled / hidden, without removing them permanently.') . '</div>',
+      ],
       'items' => [
         '#type' => 'container',
         '#attributes' => [
@@ -757,17 +760,17 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             'layout-paragraphs-disabled-items__items',
           ],
         ],
-        'description' => [
-          '#markup' => '<div class="layout-paragraphs-disabled-items__description">' . $this->t('Drop items here that you want to keep disabled / hidden, without removing them permanently.') . '</div>',
-        ],
       ],
     ];
 
-    // Pass specific paragraphsLayoutWidget settings to js.
-    $elements['#attached']['drupalSettings']['paragraphsLayoutWidget'] = [
+    // Pass widget instance settings to JS.
+    $elements['#attached']['drupalSettings']['layoutParagraphsWidgets'][$this->wrapperId] = [
+      'wrapperId' => $this->wrapperId,
       'maxDepth' => $this->getSetting('nesting_depth'),
       'requireLayouts' => $this->getSetting('require_layouts'),
       'isTranslating' => $elements["add_more"]["actions"]["#isTranslating"] ?? NULL,
+      'cardinality' => $this->fieldDefinition->getFieldStorageDefinition()->getCardinality(),
+      'itemsCount' => $this->activeItemsCount($widget_state['items']),
     ];
     // Add layout_paragraphs_widget library.
     $elements['#attached']['library'][] = 'layout_paragraphs/layout_paragraphs_widget';
@@ -779,7 +782,6 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
    */
   public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
     $elements = parent::form($items, $form, $form_state, $get_delta);
-
     // Signal to content_translation that this field should be treated as
     // multilingual and not be hidden, see
     // \Drupal\content_translation\ContentTranslationHandler::entityFormSharedElements().
@@ -846,7 +848,10 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     }
     $elements['active_items'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => ['active-items']],
+      '#attributes' => [
+        'class' => ['active-items'],
+        'id' => $this->wrapperId . "--active-items",
+      ],
       'items' => $tree,
       '#parents' => [],
     ];
@@ -863,7 +868,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     $layout_element['preview']['regions'] = ['#weight' => 100] + $layout_element['#layout_instance']->build($layout_element['preview']['regions']);
     $layout_element['preview']['regions']['#parents'] = $layout_element['#parents'];
     foreach ($elements as $index => $element) {
-      if ($element['#parent_uuid'] == $uuid) {
+      if (!empty($element['#region']) && $element['#parent_uuid'] == $uuid) {
         /* @var \Drupal\Core\Entity\EntityInterface $child_entity */
         $child_entity = $element['#entity'];
         $child_uuid = $child_entity->uuid();
@@ -906,20 +911,6 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       }
     }
     return $layout_info;
-  }
-
-  /**
-   * Returns markup for the toggle menu button.
-   *
-   * @return array
-   *   Returns the render array for an "add more" toggle button.
-   */
-  protected function toggleButton($uuid_class = '') {
-    return [
-      '#markup' => '<button class="layout-paragraphs-add-content__toggle" data-parent-uuid-class="' . $uuid_class . '">+<span class="visually-hidden">Add Item</span></button>',
-      '#allowed_tags' => ['button', 'span'],
-      '#weight' => 10000,
-    ];
   }
 
   /**
@@ -987,10 +978,13 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         'mode' => $display->getMode(),
       ];
       field_group_attach_groups($element['entity_form'], $context);
-      if (function_exists('field_group_form_pre_render')) {
+      if (method_exists(FormatterHelper::class, 'formProcess')) {
+        $element['entity_form']['#process'][] = [FormatterHelper::class, 'formProcess'];
+      }
+      elseif (function_exists('field_group_form_pre_render')) {
         $element['entity_form']['#pre_render'][] = 'field_group_form_pre_render';
       }
-      if (function_exists('field_group_form_process')) {
+      elseif (function_exists('field_group_form_process')) {
         $element['entity_form']['#process'][] = 'field_group_form_process';
       }
     }
@@ -1001,7 +995,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     if ($this->isLayoutParagraph($entity)) {
       $available_layouts = $this->getAvailableLayouts($entity);
       $layout_settings = $this->getLayoutSettings($entity);
-      $layout = $layout_settings['layout'];
+      $layout = !empty($layout_settings['layout']) ? $layout_settings['layout'] : key($available_layouts);
       $layout_plugin_config = $layout_settings['config'] ?? [];
 
       $element['entity_form']['layout_selection'] = [
@@ -1040,7 +1034,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
 
       // Switching layouts should change the layout plugin options form
       // with Ajax for users with adequate permissions.
-      if ($this->currentUser->hasPermission('edit entity reference layout plugin config')) {
+      if ($this->currentUser->hasPermission('edit layout paragraphs plugin config')) {
         $element['entity_form']['layout_selection']['layout']['#ajax'] = [
           'event' => 'change',
           'callback' => [$this, 'buildLayoutConfigurationFormAjax'],
@@ -1057,7 +1051,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       $element['entity_form']['layout_plugin_form'] = [
         '#prefix' => '<div id="layout-config">',
         '#suffix' => '</div>',
-        '#access' => $this->currentUser->hasPermission('edit entity reference layout plugin config'),
+        '#access' => $this->currentUser->hasPermission('edit layout paragraphs plugin config'),
       ];
 
       // Add the layout configuration form if applicable.
@@ -1138,7 +1132,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         '#title' => $this->t('Behaviors'),
         '#element_validate' => [[$this, 'validateBehaviors']],
         '#entity' => $entity,
-        '#weight' => 1000,
+        '#weight' => -99,
       ];
       foreach ($behavior_plugins as $plugin_id => $plugin) {
         $element['entity_form']['behavior_plugins'][$plugin_id] = ['#type' => 'container'];
@@ -1160,7 +1154,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         '#weight' => 1000,
         '#type' => 'actions',
         '#attributes' => ['class' => ['layout-paragraphs-item-form-actions']],
-        'save_item' => [
+        'submit' => [
           '#type' => 'submit',
           '#name' => 'save',
           '#value' => $this->t('Save'),
@@ -1237,6 +1231,14 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
         }
       }
     }
+    // Add compatibility for Inline Entity Form module.
+    // See https://www.drupal.org/project/inline_entity_form/issues/3160809
+    // and https://www.drupal.org/project/layout_paragraphs/issues/3160806
+    $ief_widget_state = $form_state->get('inline_entity_form');
+    if (!is_null($ief_widget_state)) {
+      ElementSubmit::attach($element['entity_form'], $form_state);
+      WidgetSubmit::attach($element['entity_form'], $form_state);
+    }
     return $element;
   }
 
@@ -1281,6 +1283,12 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             'callback' => [$this, 'removeItemConfirmAjax'],
             'progress' => 'none',
           ],
+          '#limit_validation_errors' => [
+            array_merge($parents, [
+              $this->fieldName,
+              'remove_form',
+            ]),
+          ],
           '#element_parents' => $parents,
         ],
         'cancel' => [
@@ -1296,6 +1304,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
             'progress' => 'none',
           ],
           '#element_parents' => $parents,
+          '#limit_validation_errors' => [],
         ],
       ],
       '#delta' => $delta,
@@ -1330,20 +1339,14 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
       $definition = $this->layoutPluginManager->getDefinition($layout_name);
       $icon = $definition->getIcon(40, 60, 1, 0);
       $rendered_icon = $this->renderer->render($icon);
-      $radio_element = $element[$key];
-      $radio_with_icon_element = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['layout-select--list-item']],
-        'icon' => [
-          '#type' => 'inline_template',
-          '#template' => '<div class="layout-icon-wrapper">{{ img }}</div>',
-          '#context' => ['img' => $rendered_icon],
-        ],
-        'radio' => $radio_element,
-      ];
-      $element[$key] = $radio_with_icon_element;
+      $title = new FormattableMarkup('<span class="layout-select__item-icon">@icon</span><span class="layout-select__item-title">@title</span>', [
+        '@title' => $element[$key]['#title'],
+        '@icon' => $rendered_icon,
+      ]);
+      $element[$key]['#title'] = $title;
+      $element[$key]['#wrapper_attributes']['class'][] = 'layout-select__item';
     }
-    $element['#wrapper_attributes'] = ['class' => ['layout-select--list']];
+    $element['#wrapper_attributes'] = ['class' => ['layout-select']];
     return $element;
   }
 
@@ -1429,6 +1432,29 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
   }
 
   /**
+   * New item validator - checks cardinality.
+   *
+   * @param array $element
+   *   The element to validate.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function newItemValidate(array $element, FormStateInterface $form_state) {
+    $triggering_element = $form_state->getTriggeringElement();
+    // Only check cardinality if the user clicked to add a new paragraph.
+    if ($triggering_element['#array_parents'] == $element['#array_parents']) {
+      $parents = $element['#element_parents'];
+      $widget_state = static::getWidgetState($parents, $this->fieldName, $form_state);
+      $count = $this->activeItemsCount($widget_state['items']);
+      $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
+
+      if ($cardinality != -1 && $count >= $cardinality) {
+        $form_state->setError($element, $this->t('You can only add @cardinality or fewer items.', ['@cardinality' => $cardinality]));
+      }
+    }
+  }
+
+  /**
    * Form submit handler - adds a new item and opens its edit form.
    *
    * @param array $form
@@ -1460,20 +1486,10 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
           $bundle_key => $bundle_id,
         ]);
       $paragraph_entity->setParentEntity($element['#host'], $this->fieldDefinition->getName());
-
-      $path = array_merge($parents, [
-        $this->fieldDefinition->getName(),
-        'add_more',
-        'actions',
-      ]);
-      $this->setLayoutSettings($paragraph_entity, [
-        'region' => $form_state->getValue(array_merge($path, ['_region'])),
-        'parent_uuid' => $form_state->getValue(array_merge($path, ['_parent_uuid'])),
-      ]);
       $widget_state['items'][] = [
         'entity' => $paragraph_entity,
-        'weight' => $form_state->getValue(array_merge($path, ['_new_item_weight'])),
         'is_new' => TRUE,
+        'weight' => count($widget_state['items']),
       ];
       $widget_state['open_form'] = $widget_state['items_count'];
       $widget_state['items_count'] = count($widget_state['items']);
@@ -1750,6 +1766,7 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
   public function saveItemAjax(array $form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement();
     $uuid = $triggering_element['#uuid'];
+    $delta = $triggering_element['#delta'];
     $parents = $triggering_element['#element_parents'];
     $field_state = static::getWidgetState($parents, $this->fieldName, $form_state);
     $widget_field = NestedArray::getValue($form, $field_state['array_parents']);
@@ -1758,7 +1775,6 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
 
     if ($form_state->hasAnyErrors()) {
       $entity_form = $widget_field['entity_form'];
-      $entity = $entity_form['#entity'];
       $selector = '#' . $this->wrapperId . ' .layout-paragraphs-form';
       $entity_form['status'] = [
         '#weight' => -100,
@@ -1768,25 +1784,27 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     }
     else {
       $element = static::findElementByUuid($widget_field, $uuid);
-      /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-      $paragraph = $element['#entity'];
-      $layout_settings = $this->getLayoutSettings($paragraph);
-
-      if ($layout_settings['parent_uuid'] && $layout_settings['region']) {
-        $parent_selector = '.paragraph-' . $layout_settings['parent_uuid'] . ' .layout-paragraphs-layout-region--' . $layout_settings['region'];
-      }
-      else {
-        $parent_selector = '';
-      }
+      $path = array_merge($widget_field['#parents'], [
+        'add_more',
+        'actions',
+      ]);
+      $target_id = $form_state->getValue(array_merge($path, ['dom_id']));
+      $insert_method = $form_state->getValue(array_merge($path, ['insert_method']));
 
       $settings = [
-        'wrapper_selector' => '#' . $this->wrapperId,
-        'selector' => '.paragraph-' . $uuid,
-        'parent_selector' => $parent_selector,
-        'weight' => $element['#weight'],
+        'target_id' => $target_id,
+        'insert_method' => $insert_method,
+        'element_id' => $this->wrapperId . '--item-' . $delta,
       ];
       $response->addCommand(new LayoutParagraphsInsertCommand($settings, $element));
       $response->addCommand(new CloseDialogCommand('#' . $html_id));
+      $response->addCommand(new SettingsCommand([
+        'layoutParagraphsWidgets' => [
+          $this->wrapperId => [
+            'itemsCount' => $this->activeItemsCount($field_state['items']),
+          ],
+        ],
+      ], TRUE));
     }
     $disabled_bin = $widget_field['disabled'];
     $response->addCommand(new ReplaceCommand('#' . $this->wrapperId . ' .layout-paragraphs-disabled-items', $disabled_bin));
@@ -1821,9 +1839,21 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     ];
 
     $response = new AjaxResponse();
-    $response->addCommand(new AppendCommand('#' . $this->wrapperId, '<div id="' . $html_id . '"></div>'));
-    $response->addCommand(new OpenDialogCommand('#' . $html_id, 'Edit Form', $entity_form, $dialog_options));
-    $response->addCommand(new LayoutParagraphsStateResetCommand('#' . $this->wrapperId));
+    if ($form_state->hasAnyErrors()) {
+      $content = [
+        'status' => [
+          '#weight' => -100,
+          '#type' => 'status_messages',
+        ],
+      ];
+      $response->addCommand(new OpenDialogCommand('#' . $html_id, $this->t('Unexpected Error'), $content, $dialog_options));
+      $response->addCommand(new LayoutParagraphsStateResetCommand('#' . $this->wrapperId));
+    }
+    else {
+      $response->addCommand(new AppendCommand('#' . $this->wrapperId, '<div id="' . $html_id . '"></div>'));
+      $response->addCommand(new OpenDialogCommand('#' . $html_id, 'Edit Form', $entity_form, $dialog_options));
+      $response->addCommand(new LayoutParagraphsStateResetCommand('#' . $this->wrapperId));
+    }
     return $response;
   }
 
@@ -1888,7 +1918,13 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     $response->addCommand(new RemoveCommand('.paragraph-' . $uuid));
     $response->addCommand(new CloseDialogCommand('#' . $html_id));
     $response->addCommand(new ReplaceCommand('#' . $this->wrapperId . ' .layout-paragraphs-disabled-items', $disabled_bin));
-
+    $response->addCommand(new SettingsCommand([
+      'layoutParagraphsWidgets' => [
+        $this->wrapperId => [
+          'itemsCount' => $this->activeItemsCount($field_state['items']),
+        ],
+      ],
+    ], TRUE));
     return $response;
   }
 
@@ -1934,12 +1970,29 @@ class LayoutParagraphsWidget extends WidgetBase implements ContainerFactoryPlugi
     if ($entity_form = NestedArray::getValue($form, $parents)) {
       $response = new AjaxResponse();
       $response->addCommand(new ReplaceCommand('#' . $this->wrapperId . ' .layout-paragraphs-form', $entity_form));
+      $response->addCommand(new InvokeCommand('#' . $this->wrapperId . ' .layout-paragraphs-form input:checked', 'focus'));
       $response->addCommand(new LayoutParagraphsStateResetCommand('#' . $this->wrapperId));
       return $response;
     }
     else {
       return [];
     }
+  }
+
+  /**
+   * Returns count of active paragraph items.
+   *
+   * Deleted paragraph items are not deleted immediately,
+   * but flagged for removal. This function returns the number
+   * of items not flagged for removal.
+   *
+   * @param array $items
+   *   The array of field items.
+   */
+  protected function activeItemsCount(array $items) {
+    return array_reduce($items, function ($count, $item) {
+      return isset($item['entity']) ? $count + 1 : $count;
+    }, 0);
   }
 
   /**

@@ -1,11 +1,27 @@
-request.process:
+pd_request.process:
   path: '/request/{doc_request}/process'
+  methods: ['POST']
   defaults:
     _title: 'Process request'
     _controller: '\Drupal\pd_request\Controller\DocRequestProcessController::view'
-  options:
-    parameters:
-      request:
-        type: 'entity:doc_request'
   requirements:
-    _permission: 'access content'
+    _role: 'authenticated'
+    _format: json
+pd_request.requests_refresh:
+  path: '/request/refresh'
+  methods: ['POST']
+  defaults:
+    _title: 'Periodically refresh requests'
+    _controller: '\Drupal\pd_request\Controller\ViewDocRequestController::view'
+  requirements:
+    _role: 'authenticated'
+    _format: json
+pd_request.documents_refresh:
+  path: '/documents/refresh'
+  methods: ['POST']
+  defaults:
+    _title: 'Periodically refresh documents'
+    _controller: 'pd_request.request_manager:documentsRefresh'
+  requirements:
+    _role: 'authenticated'
+    _format: json

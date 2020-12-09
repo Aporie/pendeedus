@@ -1,5 +1,5 @@
 # Ignores Vscode files
-.workspace*
+*.code-workspace
 .vscode
 
 # Ignore drupal files.

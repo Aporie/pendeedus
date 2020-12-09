@@ -9,7 +9,7 @@ dependencies:
   - drupal:paragraphs
   - drupal:layout_discovery
 
-# Information added by Drupal.org packaging script on 2020-07-16
-version: '1.0.0-beta3'
+# Information added by Drupal.org packaging script on 2020-12-08
+version: '1.0.0-beta4'
 project: 'layout_paragraphs'
-datestamp: 1594929049
+datestamp: 1607441987
