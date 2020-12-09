@@ -1,0 +1,5 @@
+entity.authnet_profile.collection:
+  title: Authorize.net
+  description: Configure the different Authorize.net profiles for your website, test connection etc.
+  parent: payment.admin
+  route_name: entity.authnet_profile.collection

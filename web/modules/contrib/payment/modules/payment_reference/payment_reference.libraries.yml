@@ -1,0 +1,4 @@
+resume_context:
+  version: VERSION
+  js:
+    js/payment_reference.js: {}

@@ -1,0 +1,8 @@
+payment_reference.resume_context:
+  path: '/payment_reference/resume/{payment}'
+  defaults:
+    _controller: '\Drupal\payment_reference\Controller\ResumeContext::execute'
+    _title_callback: '\Drupal\payment_reference\Controller\ResumeContext::title'
+  requirements:
+    _custom_access: '\Drupal\payment_reference\Controller\ResumeContext::access'
+    _csrf_token: 'TRUE'

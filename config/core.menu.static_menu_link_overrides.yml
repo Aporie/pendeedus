@@ -1,10 +1,10 @@
 definitions:
   user__page:
+    enabled: false
     menu_name: backoffice
     parent: ''
-    weight: -50
     expanded: false
-    enabled: true
+    weight: -50
   user__logout:
     weight: -49
     menu_name: account

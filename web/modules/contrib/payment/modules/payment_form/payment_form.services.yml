@@ -1,0 +1,4 @@
+services:
+  payment_form.hook.entity_extra_field_info:
+    class: Drupal\payment_form\Hook\EntityExtraFieldInfo
+    arguments: ['@string_translation']

@@ -1,0 +1,60 @@
+{
+  "require": {
+    "composer/installers": "~1.0.23",
+    "cweagans/composer-patches": "~1.0",
+    "drupal-composer/drupal-scaffold": "~2.0",
+    "drupal/core": "~8.2",
+    "drupal/payment": "*",
+    "drush/drush": "~8.1 || >= 8.1.2",
+    "phpunit/phpunit": "~4.8",
+    "behat/mink-goutte-driver": "~1.2"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "web/core": [
+        "type:drupal-core"
+      ],
+      "web/modules/{$name}": [
+        "type:drupal-module"
+      ],
+      "web/profiles/{$name}": [
+        "type:drupal-profile"
+      ],
+      "web/themes/{$name}": [
+        "type:drupal-theme"
+      ]
+    },
+    "patches": {
+      "drupal/core": {
+        "https://www.drupal.org/node/2820952": "https://www.drupal.org/files/issues/drupal_2820952_8.patch",
+        "https://www.drupal.org/node/2822564": "https://www.drupal.org/files/issues/drupal_2822564_2.patch"
+      }
+    }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../drupal-payment/",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "composer",
+      "url": "https://packagist.drupal-composer.org"
+    }
+  ],
+  "config": {
+    "process-timeout": 0
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+    ],
+    "post-update-cmd": [
+      "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+    ]
+  }
+}

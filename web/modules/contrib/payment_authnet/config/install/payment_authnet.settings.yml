@@ -1,0 +1,13 @@
+field_mappings:
+  billing_information:
+    section_title: 'Name on Credit Card'
+    section_description: ''
+    section_position: '-4'
+    first_name:
+      title: 'First Name'
+      default_value: ''
+      required: 1
+    last_name:
+      title: 'Last Name'
+      default_value: ''
+      required: 1

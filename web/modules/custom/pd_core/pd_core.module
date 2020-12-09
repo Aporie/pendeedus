@@ -10,6 +10,41 @@ use Drupal\user\Entity\User;
 use Drupal\Core\Render\Markup;
 
 /**
+ * Implements hook_theme().
+ */
+function pd_core_theme() {
+  return [
+    'controller__account_edit' => [
+      'render element' => 'build',
+      'path' => drupal_get_path('module', 'pd_core') . '/templates/controller',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function pd_core_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $targets = ['profile_documents_form', 'profile_vendor_form'];
+  if (in_array($form_id, $targets)) {
+    $form['actions']['submit']['#submit'][] = 'pd_core_redirect_here';
+  }
+  if ($form_id == 'profile_documents_form') {
+    $form['actions']['submit']['#value'] = t('Save documents');
+  }
+  if ($form_id == 'profile_vendor_form') {
+    $form['actions']['submit']['#value'] = t('Upload profile');
+  }
+}
+
+/**
+ * Custom submit hander to redirect to current page.
+ */
+function pd_core_redirect_here($form, FormStateInterface &$form_state) {
+  $form_state->setRedirect('<current>');
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function pd_core_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {

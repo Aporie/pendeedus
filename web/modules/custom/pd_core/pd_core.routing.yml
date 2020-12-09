@@ -6,4 +6,12 @@ pd_core.settings:
     link_id: 'pd_core.settings'
   requirements:
     _permission: 'administer pendeedus settings'
+pd_core.user_edit:
+  path: '/user/edit'
+  defaults:
+    _controller: '\Drupal\pd_core\Controller\AccountEditController::content'
+    _title: 'Edit your profile'
+    link_id: 'pd_core.user_edit'
+  requirements:
+    _permission: 'view own profile'
 

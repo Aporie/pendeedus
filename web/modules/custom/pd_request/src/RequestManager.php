@@ -57,17 +57,4 @@ class RequestManager implements RequestManagerInterface {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function documentsRefresh() {
-    $args = [];
-    $view = Views::getView('user_requests')->buildRenderable('block_1', $args);
-    if (!empty($view)) {
-      return new JsonResponse($this->renderer->render($view));
-    }
-
-    return new JsonResponse(['error' => 'An error occured.']);
-  }
-
 }

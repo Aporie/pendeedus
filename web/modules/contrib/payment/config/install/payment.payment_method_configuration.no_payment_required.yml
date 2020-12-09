@@ -1,0 +1,11 @@
+id: no_payment_required
+label: 'No payment required'
+ownerId: 1
+pluginConfiguration:
+  execute_status_id: payment_success
+  capture: false
+  capture_status_id: payment_success
+  refund: true
+  refund_status_id: payment_refunded
+pluginId: payment_basic
+status: false

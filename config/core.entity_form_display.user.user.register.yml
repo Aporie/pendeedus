@@ -44,4 +44,5 @@ content:
       label: ''
     third_party_settings: {  }
     region: content
-hidden: {  }
+hidden:
+  documents_profiles: true

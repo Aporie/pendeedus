@@ -12,7 +12,7 @@ pd_request.requests_refresh:
   methods: ['POST']
   defaults:
     _title: 'Periodically refresh requests'
-    _controller: '\Drupal\pd_request\Controller\ViewDocRequestController::view'
+    _controller: '\Drupal\pd_request\Controller\ViewRequestsRefreshController::view'
   requirements:
     _role: 'authenticated'
     _format: json
@@ -21,7 +21,7 @@ pd_request.documents_refresh:
   methods: ['POST']
   defaults:
     _title: 'Periodically refresh documents'
-    _controller: 'pd_request.request_manager:documentsRefresh'
+    _controller: '\Drupal\pd_request\Controller\ViewDocumentsRefreshController::view'
   requirements:
     _role: 'authenticated'
     _format: json

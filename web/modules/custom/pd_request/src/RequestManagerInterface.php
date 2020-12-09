@@ -9,12 +9,5 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface RequestManagerInterface {
 
-  /**
-   * Ajax request: refresh request page.
-   *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   View html.
-   */
-  public function documentsRefresh();
 
 }

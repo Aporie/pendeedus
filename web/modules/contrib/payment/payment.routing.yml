@@ -1,0 +1,196 @@
+payment.admin:
+  path: '/admin/config/services/payment'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: Payment
+  requirements:
+    _permission: 'access administration pages'
+
+payment.payment.collection_by_owner:
+  path: '/user/{user}/payment'
+  defaults:
+    _controller: '\Drupal\payment\Controller\ViewPaymentsByOwner::execute'
+    _title: 'Payments'
+  requirements:
+    _custom_access: '\Drupal\payment\Controller\ViewPaymentsByOwner::access'
+
+entity.payment.collection:
+  path: '/admin/content/payment'
+  defaults:
+    _entity_list: payment
+    _title: 'Payments'
+  requirements:
+    _permission: 'payment.payment.view.any'
+
+entity.payment.canonical:
+  path: '/payment/{payment}'
+  defaults:
+    _entity_view: 'payment.full'
+    _title_callback: '\Drupal\payment\Controller\ViewPayment::title'
+  requirements:
+    _entity_access: 'payment.view'
+
+entity.payment.update_status_form:
+  path: '/payment/{payment}/update-status'
+  defaults:
+    _entity_form: 'payment.update_status'
+    _title: Update payment status
+  requirements:
+    _entity_access: 'payment.update_status'
+  options:
+    _admin_route: TRUE
+
+entity.payment.capture_form:
+  path: '/payment/{payment}/capture'
+  defaults:
+    _entity_form: 'payment.capture'
+    _title: Capture payment
+  requirements:
+    _entity_access: 'payment.capture'
+  options:
+    _admin_route: TRUE
+
+entity.payment.refund_form:
+  path: '/payment/{payment}/refund'
+  defaults:
+    _entity_form: 'payment.refund'
+    _title: Refund payment
+  requirements:
+    _entity_access: 'payment.refund'
+  options:
+    _admin_route: TRUE
+
+entity.payment.complete:
+  path: '/payment/{payment}/complete'
+  defaults:
+    _controller: '\Drupal\payment\Controller\CompletePayment::execute'
+  requirements:
+    _entity_access: 'payment.complete'
+    _csrf_token: 'TRUE'
+
+entity.payment.delete_form:
+  path: '/payment/{payment}/delete'
+  defaults:
+    _entity_form: 'payment.delete'
+  requirements:
+    _entity_access: 'payment.delete'
+  options:
+    _admin_route: TRUE
+
+payment.payment_method.collection:
+  path: '/admin/config/services/payment/method'
+  defaults:
+    _controller: '\Drupal\payment\Controller\ListPaymentMethods::execute'
+    _title: 'Payment methods'
+  requirements:
+    _permission: 'payment.payment_method_configuration.view.any'
+
+entity.payment_method_configuration.collection:
+  path: '/admin/config/services/payment/method/configuration'
+  defaults:
+    _entity_list: 'payment_method_configuration'
+    _title: 'Payment method configuration'
+  requirements:
+    _permission: 'payment.payment_method_configuration.view.any'
+
+payment.payment_method_configuration.select:
+  path: '/admin/config/services/payment/method/configuration-add'
+  defaults:
+    _controller: '\Drupal\payment\Controller\SelectPaymentMethodConfiguration::execute'
+    _title: 'Add payment method configuration'
+  requirements:
+    _custom_access: '\Drupal\payment\Controller\SelectPaymentMethodConfiguration::access'
+
+payment.payment_method_configuration.add:
+  path: '/admin/config/services/payment/method/configuration-add/{plugin_id}'
+  defaults:
+    _controller: '\Drupal\payment\Controller\AddPaymentMethodConfiguration::execute'
+    _title_callback: '\Drupal\payment\Controller\AddPaymentMethodConfiguration::title'
+  requirements:
+    _custom_access: '\Drupal\payment\Controller\AddPaymentMethodConfiguration::access'
+
+entity.payment_method_configuration.edit_form:
+  path: '/admin/config/services/payment/method/configuration/{payment_method_configuration}'
+  defaults:
+    _entity_form: 'payment_method_configuration.default'
+    _title_callback: '\Drupal\payment\Controller\EditPaymentMethodConfiguration::title'
+  requirements:
+    _entity_access: 'payment_method_configuration.update'
+
+entity.payment_method_configuration.enable:
+  path: '/admin/config/services/payment/method/configuration/{payment_method_configuration}/enable'
+  defaults:
+    _controller: '\Drupal\payment\Controller\EnablePaymentMethodConfiguration::execute'
+  requirements:
+    _entity_access: 'payment_method_configuration.enable'
+    _csrf_token: 'TRUE'
+
+entity.payment_method_configuration.disable:
+  path: '/admin/config/services/payment/method/configuration/{payment_method_configuration}/disable'
+  defaults:
+    _controller: '\Drupal\payment\Controller\DisablePaymentMethodConfiguration::execute'
+  requirements:
+    _entity_access: 'payment_method_configuration.disable'
+    _csrf_token: 'TRUE'
+
+entity.payment_method_configuration.delete_form:
+  path: '/admin/config/services/payment/method/configuration/{payment_method_configuration}/delete'
+  defaults:
+    _entity_form: 'payment_method_configuration.delete'
+  requirements:
+    _entity_access: 'payment_method_configuration.delete'
+
+entity.payment_method_configuration.duplicate_form:
+  path: '/admin/config/services/payment/method/configuration/{payment_method_configuration}/duplicate'
+  defaults:
+    _controller: '\Drupal\payment\Controller\DuplicatePaymentMethodConfiguration::execute'
+    _title_callback: '\Drupal\payment\Controller\DuplicatePaymentMethodConfiguration::title'
+  requirements:
+    _entity_access: 'payment_method_configuration.duplicate'
+
+entity.payment_status.collection:
+  path: '/admin/config/services/payment/status'
+  defaults:
+    _controller: '\Drupal\payment\Controller\ListPaymentStatuses::execute'
+    _title: 'Payment statuses'
+  requirements:
+    _permission: 'payment.payment_status.administer'
+
+payment.payment_status.add:
+  path: '/admin/config/services/payment/status/add'
+  defaults:
+    _controller: '\Drupal\payment\Controller\AddPaymentStatus::execute'
+    _title: 'Add a payment status'
+  requirements:
+    _permission: 'payment.payment_status.administer'
+
+entity.payment_status.edit_form:
+  path: '/admin/config/services/payment/status/edit/{payment_status}'
+  defaults:
+    _entity_form: 'payment_status.default'
+    _title_callback: '\Drupal\payment\Controller\EditPaymentStatus::title'
+  requirements:
+    _entity_access: 'payment_status.update'
+
+entity.payment_status.delete_form:
+  path: '/admin/config/services/payment/status/delete/{payment_status}'
+  defaults:
+    _entity_form: 'payment_status.delete'
+  requirements:
+    _entity_access: 'payment_status.delete'
+
+payment.payment_type.collection:
+  path: '/admin/config/services/payment/type'
+  defaults:
+    _controller: '\Drupal\payment\Controller\ListPaymentTypes::execute'
+    _title: Payment types
+  requirements:
+    _permission: 'payment.payment_type.administer'
+
+payment.payment_type:
+  path: '/admin/config/services/payment/type/{bundle}'
+  defaults:
+    _controller: '\Drupal\payment\Controller\ConfigurePaymentType::execute'
+    _title_callback: '\Drupal\payment\Controller\ConfigurePaymentType::title'
+  requirements:
+    _permission: 'payment.payment_type.administer'

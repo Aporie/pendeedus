@@ -1,0 +1,25 @@
+{
+  "name": "drupal/payment",
+  "type": "drupal-module",
+  "license": "GPL-2.0",
+  "autoload": {
+    "psr-4": {
+      "Drupal\\payment\\": "src",
+      "Drupal\\payment_form\\": "modules/payment_form/src",
+      "Drupal\\payment_reference\\": "modules/payment_reference/src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Drupal\\Tests\\payment\\": "tests/src",
+      "Drupal\\Tests\\payment_form\\": "modules/payment_form/tests/src",
+      "Drupal\\Tests\\payment_reference\\": "modules/payment_reference/tests/src"
+    }
+  },
+  "require" : {
+    "ext-bcmath": "*",
+    "php": "^7.1",
+    "drupal/currency": "~3.0",
+    "drupal/plugin": "~2.2"
+  }
+}

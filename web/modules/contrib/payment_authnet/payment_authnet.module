@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations and general functions.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\payment\Entity\Payment\PaymentRefundForm;
+use Drupal\payment\Entity\PaymentInterface;
+use Drupal\payment_authnet\Plugin\Payment\Method\AuthnetInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function payment_authnet_entity_type_build(array &$entity_types) {
+  // Add cancel (void) payment form and link.
+  $entity_types['payment']
+    ->setFormClass('payment_authnet_void', 'Drupal\\payment_authnet\\Entity\\Payment\\AuthnetVoidForm')
+    ->setLinkTemplate('payment-authnet-void', '/payment/{payment}/void');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function payment_authnet_payment_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $payment_method = $entity->getPaymentMethod();
+  return AccessResult::forbiddenIf('void' == $operation
+    && !($payment_method instanceof AuthnetInterface && $payment_method->voidPaymentAccess($account)));
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function payment_authnet_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  // Add Cancel (Void) link to operations.
+  if ($entity instanceof PaymentInterface && $entity->access('void')) {
+    $operations['void'] = [
+      'title' => t('Cancel'),
+      'attributes' => [
+        'data-accepts' => 'application/vnd.drupal-modal',
+      ],
+      'query' => \Drupal::destination()->getAsArray(),
+      'url' => $entity->toUrl('payment-authnet-void'),
+    ];
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function payment_authnet_form_alter(&$form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof PaymentRefundForm || 'refund' != $form_object->getOperation()) {
+    return;
+  }
+
+  $payment_method = $form_object->getEntity()->getPaymentMethod();
+  if ($payment_method instanceof AuthnetInterface && $payment_method->getPartialRefund()) {
+    /** @var \Drupal\payment_authnet\PaymentRefundFormAlter $helper */
+    $helper = Drupal::service('payment_authnet.refund_form_alter');
+    $helper->attachPartialRefunds($form, $form_state);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load().
+ */
+function payment_authnet_payment_load($entities) {
+  foreach ($entities as $payment) {
+    $payment_method = $payment->getPaymentMethod();
+    // Refresh Authorize.net Transaction Details for non-permanent statuses.
+    if ($payment_method instanceof AuthnetInterface) {
+      $transaction_status = $payment_method->getConfiguration('transaction_status', 'unknown');
+      $tmp_transaction_statuses = [
+        'approvedReview',
+        'refundPendingSettlement',
+        'capturedPendingSettlement',
+        'underReview',
+        'unknown',
+      ];
+      if (in_array($transaction_status, $tmp_transaction_statuses)) {
+        $payment_method->getTransactionDetails();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function payment_authnet_help($route_name, RouteMatchInterface $arg) {
+  switch ($route_name) {
+    case 'help.page.payment_authnet':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module provides Authorize.net integration for the Payment module.') . '</p>';
+
+      // Add a link to the Drupal.org project.
+      $output .= '<p>';
+      $output .= t('Visit the <a href=":project_link">Payment Authorize.net project page</a> on Drupal.org for more information.', [
+        ':project_link' => 'https://www.drupal.org/project/payment_authnet',
+      ]);
+      $output .= '</p>';
+
+      return $output;
+  }
+}

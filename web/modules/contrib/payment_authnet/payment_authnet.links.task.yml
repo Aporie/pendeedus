@@ -1,0 +1,16 @@
+payment_authnet.view_profiles:
+  title: 'Profiles'
+  route_name: entity.authnet_profile.collection
+  base_route: entity.authnet_profile.collection
+payment_authnet.test_connection:
+  title: 'Test Connection'
+  route_name: payment_authnet.test
+  base_route: entity.authnet_profile.collection
+payment_authnet.additional_fields:
+  title: 'Additional Fields'
+  route_name: payment_authnet.additional_fields
+  base_route: entity.authnet_profile.collection
+payment_authnet.payment.void:
+  base_route: entity.payment.canonical
+  route_name: entity.payment.payment_authnet_void
+  title: 'Cancel'

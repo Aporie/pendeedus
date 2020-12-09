@@ -1,0 +1,23 @@
+payment_type:
+  label: Payment type
+  plugin_manager_service_id: plugin.manager.payment.type
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+  operations_provider_class: \Drupal\payment\Plugin\Payment\Type\PaymentTypeOperationsProvider
+payment_line_item:
+  label: Payment line item
+  plugin_manager_service_id: plugin.manager.payment.line_item
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+payment_method:
+  label: Payment method
+  plugin_manager_service_id: plugin.manager.payment.method
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+  operations_provider_class: \Drupal\payment\Plugin\Payment\Method\PaymentMethodOperationsProvider
+payment_method_configuration:
+  label: Payment method configuration
+  plugin_manager_service_id: plugin.manager.payment.method_configuration
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+payment_status:
+  label: Payment status
+  plugin_manager_service_id: plugin.manager.payment.status
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+  operations_provider_class: \Drupal\payment\Plugin\Payment\Status\PaymentStatusOperationsProvider

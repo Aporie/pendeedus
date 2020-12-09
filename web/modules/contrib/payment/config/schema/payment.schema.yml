@@ -1,0 +1,113 @@
+payment.payment_method_configuration.*:
+  type: config_entity
+  label: Payment method
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    ownerId:
+      type: integer
+      label: Owner ID
+    pluginConfiguration:
+      type: plugin.plugin_configuration.payment_method_configuration.[%parent.pluginId]
+      label: Plugin configuration
+    pluginId:
+      type: string
+      label: Plugin ID
+    status:
+      type: boolean
+      label: Status
+    uuid:
+      type: string
+      label: UUID
+
+payment.payment_status.*:
+  type: config_entity
+  label: Payment status
+  mapping:
+    description:
+      label: Description
+      type: text
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    parentId:
+      type: string
+      label: Parent ID
+
+plugin.plugin_configuration.payment_method_configuration.payment_base:
+  type: mapping
+  mapping:
+    message_text:
+      label: Message text
+      type: text
+    message_text_format:
+      label: Message text format
+      type: string
+
+plugin.plugin_configuration.payment_method_configuration.payment_basic:
+  type: plugin.plugin_configuration.payment_method_configuration.payment_base
+  mapping:
+    brand_label:
+      label: Brand label
+      type: text
+    execute_status_id:
+      label: Execute payment status
+      type: string
+    capture:
+      label: Capture
+      type: boolean
+    capture_status_id:
+      label: Capture payment status
+      type: string
+    refund:
+      label: Refund
+      type: boolean
+    refund_status_id:
+      label: Refund payment status
+      type: string
+
+plugin.plugin_configuration.line_item.payment_base:
+  type: mapping
+  mapping:
+    name:
+      label: Name
+      type: string
+    quantity:
+      label: Quantity
+      type: float
+
+plugin.plugin_configuration.line_item.payment_basic:
+  type: plugin.plugin_configuration.line_item.payment_base
+  mapping:
+    amount:
+      label: Amount
+      type: float
+    currency_code:
+      label: Currency code
+      type: string
+    description:
+      label: Description
+      type: text
+
+plugin.plugin_configuration.payment_status.payment_base:
+  type: mapping
+  mapping:
+    created:
+      label: ID
+      type: integer
+    name:
+      label: Created
+      type: integer
+
+views.filter.payment_method:
+  type: views.filter.in_operator
+
+views.filter.payment_status:
+  type: views.filter.in_operator

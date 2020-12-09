@@ -7,6 +7,7 @@ label: Documents
 display_label: Documents
 multiple: false
 registration: false
-roles: {  }
+roles:
+  vendor: vendor
 allow_revisions: false
 new_revision: false

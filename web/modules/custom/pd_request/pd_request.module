@@ -13,8 +13,7 @@ function pd_request_preprocess_page(&$variables) {
   $logged_in = \Drupal::currentUser()->isAuthenticated();
   if (!$logged_in) {
     # Add libraries for anonymous
-    $libraries['#attached']['library'][] = 'core/drupal.ajax';
-    render($libraries);
+    $variables['#attached']['library'][] = 'core/drupal.ajax';
   }
 }
 
@@ -29,7 +28,7 @@ function pd_request_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function pd_request_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function pd_request_form_system_theme_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Add needed options.
   if (isset($form["layout"]["sidebar_second"]["bootstrap_barrio_sidebar_second_width"])) {
     $form["layout"]["sidebar_second"]["bootstrap_barrio_sidebar_second_width"]['#options'][5] = t('5 cols');

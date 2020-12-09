@@ -18,6 +18,7 @@ permissions:
   - 'edit field_documents'
   - 'edit field_status'
   - 'execute php code'
+  - 'rabbit hole bypass user'
   - 'update any coverage profile'
   - 'update any documents profile'
   - 'update any vendor profile'

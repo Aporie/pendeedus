@@ -1,0 +1,57 @@
+payment_reference.payment_type:
+  label: Payment Reference configuration
+  type: config_object
+  mapping:
+    allowed_plugin_ids:
+      label: Allowed payment method plugin IDs
+      sequence:
+        - label: Payment method plugin ID
+          type: string
+      type: sequence
+    limit_allowed_plugins:
+      label: Limit allowed payment methods
+      type: boolean
+    plugin_selector_id:
+      label: Plugin selector ID
+      type: string
+    plugin_selector_configuration:
+      label: Plugin selector configuration
+      type: plugin.plugin_configuration.selector.[%parent.plugin_selector_id]
+
+plugin.plugin_configuration.payment_type.payment_reference:
+  label: Payment Reference payment type configuration
+  mapping:
+    bundle:
+      label: Bundle
+      type: string
+    entity_type_id:
+      label: Entity type ID
+      type: string
+    field_name:
+      label: Field name
+      type: string
+  type: mapping
+
+field.storage_settings.payment_reference:
+  type: base_entity_reference_field_settings
+
+field.field_settings.payment_reference:
+  label: Payment reference field settings
+  type: field.field_settings.entity_reference
+  mapping:
+    currency_code:
+      label: Currency code
+      type: string
+    line_items_data:
+      label: Line items data
+      type: sequence
+      sequence:
+        - label: Line item data
+          mapping:
+            plugin_id:
+              label: Plugin ID
+              type: string
+            plugin_configuration:
+              label: Plugin configuration
+              type: plugin.plugin_configuration.line_item.[%parent.plugin_id]
+          type: mapping

@@ -1,0 +1,47 @@
+payment_form.payment_type:
+  type: config_object
+  label: Payment Form configuration
+  mapping:
+    allowed_plugin_ids:
+      label: Allowed payment method plugin IDs
+      sequence:
+        - label: Payment method plugin ID
+          type: string
+      type: sequence
+    limit_allowed_plugins:
+      label: Limit allowed payment methods
+      type: boolean
+    plugin_selector_id:
+      label: Plugin selector ID
+      type: string
+    plugin_selector_configuration:
+      label: Plugin selector configuration
+      type: plugin.plugin_configuration.selector.[%parent.plugin_selector_id]
+
+plugin.plugin_configuration.payment_type.payment_form:
+  type: config_object
+  label: Payment Form payment type configuration
+  mapping:
+    bundle:
+      label: Bundle
+      type: string
+    destination_url:
+      label: Destination URL
+      type: uri
+    entity_type_id:
+      label: Entity type ID
+      type: string
+    field_name:
+      label: Field name
+      type: string
+
+field.field_settings.payment_form:
+  type: config_object
+  label: Payment form field settings
+  mapping:
+    currency_code:
+      type: string
+      label: The currency code
+
+field.value.payment_form:
+  type: field.value.plugin:payment_line_item

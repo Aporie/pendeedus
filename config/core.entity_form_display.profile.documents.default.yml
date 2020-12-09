@@ -16,28 +16,28 @@ bundle: documents
 mode: default
 content:
   field_doc_eo:
-    weight: 27
+    weight: 1
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
   field_doc_minority:
-    weight: 29
+    weight: 3
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_doc_naltea:
-    weight: 28
+    weight: 2
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_doc_w9:
-    weight: 26
+    weight: 0
     settings:
       progress_indicator: throbber
     third_party_settings: {  }

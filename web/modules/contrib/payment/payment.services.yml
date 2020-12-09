@@ -1,0 +1,44 @@
+services:
+  payment.event_dispatcher:
+    class: Drupal\payment\EventDispatcherCollection
+    tags:
+      - { name: service_collector, tag: payment.event_dispatcher, call: addEventDispatcher }
+  payment.event_dispatcher.symfony:
+    class: Drupal\payment\SymfonyEventDispatcher
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: payment.event_dispatcher }
+  payment.logger:
+    parent: logger.channel_base
+    arguments: ['payment']
+  plugin.manager.payment.type:
+    class: Drupal\payment\Plugin\Payment\Type\PaymentTypeManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@class_resolver']
+    tags:
+      - { name: plugin_manager_cache_clear}
+  plugin.manager.payment.line_item:
+    class: Drupal\payment\Plugin\Payment\LineItem\PaymentLineItemManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+    tags:
+      - { name: plugin_manager_cache_clear}
+  plugin.manager.payment.method:
+    class: Drupal\payment\Plugin\Payment\Method\PaymentMethodManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@class_resolver']
+    tags:
+      - { name: plugin_manager_cache_clear}
+  plugin.manager.payment.method_configuration:
+    class: Drupal\payment\Plugin\Payment\MethodConfiguration\PaymentMethodConfigurationManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+    tags:
+      - { name: plugin_manager_cache_clear}
+  plugin.manager.payment.status:
+    class: Drupal\payment\Plugin\Payment\Status\PaymentStatusManager
+    arguments: ['@cache.discovery', '@module_handler', '@class_resolver', '@string_translation']
+    tags:
+      - { name: plugin_manager_cache_clear}
+  payment.hook.entity_crud:
+    class: Drupal\payment\Hook\EntityCrud
+    arguments: ['@plugin.manager.payment.method', '@plugin.manager.payment.status']
+  payment.hook.entity_bundle_info:
+    class: Drupal\payment\Hook\EntityBundleInfo
+    arguments: ['@plugin.manager.payment.type', '@plugin.manager.payment.method_configuration']

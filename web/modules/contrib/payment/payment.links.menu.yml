@@ -1,0 +1,25 @@
+payment.admin:
+  title: Payment
+  description: Configure payment methods, types, and statuses.
+  parent: system.admin_config_services
+  route_name: payment.admin
+entity.payment.collection:
+  title: Payments
+  description: Administer payments.
+  parent: system.admin_content
+  route_name: entity.payment.collection
+payment.payment_type.collection:
+  title: Payment types
+  description: Configure the different types of payments and their fields.
+  parent: payment.admin
+  route_name: payment.payment_type.collection
+payment.payment_method.collection:
+  title: Payment methods
+  description: View the available payment methods, and configure custom ones.
+  parent: payment.admin
+  route_name: payment.payment_method.collection
+entity.payment_status.collection:
+  title: Payment statuses
+  parent: payment.admin
+  route_name: entity.payment_status.collection
+  description: View the available payment statuses, and configure custom ones.

@@ -1,0 +1,13 @@
+payment_test.payment_line_item_element:
+  path: '/payment_test-element-payment-line-item'
+  defaults:
+    _form: '\Drupal\payment_test\PaymentLineItemElement'
+  requirements:
+    _access: 'TRUE'
+
+payment_test.payment_line_item_payment_basic_form_elements:
+  path: '/payment_test-plugin-payment-line_item-payment_basic'
+  defaults:
+    _form: '\Drupal\payment_test\PaymentLineItemPaymentBasicFormElements'
+  requirements:
+    _access: 'TRUE'

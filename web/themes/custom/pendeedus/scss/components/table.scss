@@ -13,3 +13,7 @@
     vertical-align: top;
     border-top: $table-border-width solid $table-border-color;
 }
+
+tr.status--Pending {
+    background-color: $yellow !important;
+}

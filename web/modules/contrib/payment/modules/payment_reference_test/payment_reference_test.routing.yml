@@ -1,0 +1,6 @@
+payment_reference_test.payment_reference_element:
+  path: '/payment_reference_test-element-payment_reference'
+  defaults:
+    _form: '\Drupal\payment_reference_test\PaymentReferenceElement'
+  requirements:
+    _access: 'TRUE'

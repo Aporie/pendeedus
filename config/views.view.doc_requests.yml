@@ -48,7 +48,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -76,7 +76,7 @@ display:
         type: table
         options:
           grouping: {  }
-          row_class: ''
+          row_class: 'status--{{ field_workflow }}'
           default_row_class: true
           override: true
           sticky: false
@@ -397,7 +397,7 @@ display:
           settings:
             future_format: '@interval hence'
             past_format: '@interval ago'
-            granularity: 2
+            granularity: 1
           group_column: value
           group_columns: {  }
           group_rows: true

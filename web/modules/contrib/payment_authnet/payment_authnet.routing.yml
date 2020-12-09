@@ -1,0 +1,56 @@
+entity.authnet_profile.collection:
+  path: '/admin/config/services/payment/authnet'
+  defaults:
+    _entity_list: 'authnet_profile'
+    _title: 'Authorize.net'
+  requirements:
+    _permission: 'administer payment authnet'
+
+payment_authnet.authnet_profile.add:
+  path: '/admin/config/services/payment/authnet/add'
+  defaults:
+    _entity_form: 'authnet_profile.default'
+    _title: 'Add an Authorize.net profile'
+  requirements:
+    _permission: 'administer payment authnet'
+
+entity.authnet_profile.edit_form:
+  path: '/admin/config/services/payment/authnet/edit/{authnet_profile}'
+  defaults:
+    _entity_form: 'authnet_profile.default'
+    _title: 'Edit an Authorize.net profile'
+  requirements:
+    _entity_access: 'authnet_profile.update'
+
+entity.authnet_profile.delete_form:
+  path: '/admin/config/services/payment/authnet/delete/{authnet_profile}'
+  defaults:
+    _entity_form: 'authnet_profile.delete'
+  requirements:
+    _entity_access: 'authnet_profile.delete'
+
+payment_authnet.test:
+  path: '/admin/config/services/payment/authnet/connection-test'
+  defaults:
+    _form: '\Drupal\payment_authnet\Form\TestForm'
+    _title: 'Test Authorize.net connection'
+  requirements:
+    _permission: 'administer payment authnet'
+
+payment_authnet.additional_fields:
+  path: '/admin/config/services/payment/authnet/additional-fields'
+  defaults:
+    _form: '\Drupal\payment_authnet\Form\AdditionalFields'
+    _title: 'Additional Fields'
+  requirements:
+    _permission: 'administer payment authnet'
+
+entity.payment.payment_authnet_void:
+  path: '/payment/{payment}/void'
+  defaults:
+    _entity_form: 'payment.payment_authnet_void'
+    _title: Cancel payment
+  requirements:
+    _entity_access: 'payment.void'
+  options:
+    _admin_route: TRUE

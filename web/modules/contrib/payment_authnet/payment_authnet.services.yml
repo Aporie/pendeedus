@@ -1,0 +1,15 @@
+services:
+  payment_authnet.logger:
+    parent: logger.channel_base
+    arguments: ['payment_authnet']
+  payment_authnet.refund_form_alter:
+    class: Drupal\payment_authnet\PaymentRefundFormAlter
+  payment_authnet.event_dispatcher:
+    class: Drupal\payment_authnet\EventDispatcherCollection
+    tags:
+      - { name: service_collector, tag: payment_authnet.event_dispatcher, call: addEventDispatcher }
+  payment_authnet.event_dispatcher.symfony:
+    class: Drupal\payment_authnet\SymfonyEventDispatcher
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: payment_authnet.event_dispatcher }

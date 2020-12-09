@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ *   Hook implementations and general functions.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\payment\Entity\PaymentInterface;
+use Drupal\payment_reference\PaymentReference;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function payment_reference_entity_extra_field_info() {
+  return \Drupal::service('payment_reference.hook.entity_extra_field_info')->invoke();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function payment_reference_field_storage_config_delete(FieldStorageConfigInterface $field_storage_config) {
+  if ($field_storage_config->getType() == 'payment_reference') {
+    PaymentReference::queue()->deleteByCategoryIdPrefix($field_storage_config->id());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function payment_reference_field_config_delete(FieldConfigInterface $field_config) {
+  PaymentReference::queue()->deleteByCategoryId($field_config->id());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function payment_reference_payment_insert(PaymentInterface $payment) {
+  if ($payment->bundle() == 'payment_reference') {
+    /** @var \Drupal\payment_reference\Plugin\Payment\Type\PaymentReference $payment_type */
+    $payment_type = $payment->getPaymentType();
+    PaymentReference::queue()->save($payment_type->getEntityTypeId() . '.' . $payment_type->getBundle() . '.' . $payment_type->getFieldName(), $payment->id());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function payment_reference_payment_delete(PaymentInterface $payment) {
+  PaymentReference::queue()->deleteByPaymentId($payment->id());
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function payment_reference_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getType() == 'payment_reference' && !$account->isAuthenticated()) {
+    return AccessResult::forbidden()->addCacheContexts(['user.roles:anonymous']);
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
+}

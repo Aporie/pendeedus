@@ -1,0 +1,39 @@
+payment_authorization_failed:
+  label: Authorization failed
+  parent_id: payment_failed
+payment_authorized:
+  description: The payment has been authorized by the payer, and the funds are waiting to be transferred.
+  label: Authorized
+  parent_id: payment_no_money_transferred
+payment_cancelled:
+  label: Cancelled
+  parent_id: payment_failed
+payment_config:
+  deriver: \Drupal\payment\Plugin\Payment\Status\ConfigDeriver
+  label: Configuration entity status
+  operations_provider: \Drupal\payment\Plugin\Payment\Status\ConfigOperationsProvider
+payment_created:
+  label: Created
+  parent_id: payment_no_money_transferred
+payment_expired:
+  label: Expired
+  parent_id: payment_failed
+payment_failed:
+  label: Failed
+  parent_id: payment_no_money_transferred
+payment_money_transferred:
+  label: Money has been transferred
+payment_no_money_transferred:
+  label: No money has been transferred
+payment_pending:
+  label: Pending
+  parent_id: payment_no_money_transferred
+payment_refunded:
+  label: Refunded
+  parent_id: payment_no_money_transferred
+payment_success:
+  label: Completed
+  parent_id: payment_money_transferred
+payment_unknown:
+  description: The payment status could not be automatically verified.
+  label: Unknown

@@ -1,0 +1,4 @@
+plugin_selector_id: plugin_select_list
+plugin_selector_configuration: []
+limit_allowed_plugins: false
+allowed_plugin_ids: []

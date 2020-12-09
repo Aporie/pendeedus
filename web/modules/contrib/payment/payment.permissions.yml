@@ -1,0 +1,36 @@
+payment.payment.view.any:
+  title: View any payment
+payment.payment.view.own:
+  title: View own payments
+payment.payment.update_status.any:
+  title: Update any payment's status
+payment.payment.update_status.own:
+  title: Update own payments' statuses
+payment.payment.delete.any:
+  title: Delete any payment
+payment.payment.delete.own:
+  title: Delete own payments
+payment.payment.capture.any:
+  title: Capture payments
+payment.payment.refund.any:
+  title: Refund payments
+payment.payment_method_configuration.update.any:
+  restrict access: true
+  title: Update any payment method configuration
+payment.payment_method_configuration.update.own:
+  title: Update own payment method configurations
+payment.payment_method_configuration.delete.any:
+  title: Delete any payment method configuration
+payment.payment_method_configuration.delete.own:
+  title: Delete own payment method configurations
+payment.payment_method_configuration.view.any:
+  restrict access: true
+  title: View any payment method configuration
+payment.payment_method_configuration.view.own:
+  title: View own payment method configurations
+payment.payment_status.administer:
+  title: Administer payment statuses
+payment.payment_type.administer:
+  title: Administer payment types
+permission_callbacks:
+  - \Drupal\payment\Permissions::getPermissions

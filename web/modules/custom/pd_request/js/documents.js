@@ -14,17 +14,8 @@
       }
 
       // Refresh view every 30 sec.
-      setInterval(() => { 
-        $.ajax({
-          url: drupalSettings.pd_request.refresh_path,
-          method: 'POST',
-          dataType: 'json',
-        }).done((view) => {
-          var content = $(view).find('.view-content');
-          $('.view-content').replaceWith(content);
-        }).fail(() => {
-          console.error('Page refresh failed.')
-        });
+      setInterval(() => {        
+        Drupal.ajax({ url: drupalSettings.pd_request.refresh_path }).execute();
       }, 30000);
     }
 

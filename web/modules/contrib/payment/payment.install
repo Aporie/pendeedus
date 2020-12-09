@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Installation and uninstallation functions.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function payment_schema() {
+  $schema['payment_queue'] = [
+    'fields' => [
+      'acquisition_code' => [
+        'default' => '',
+        'length' => 255,
+        'not null' => TRUE,
+        'type' => 'varchar',
+      ],
+      'category_id' => [
+        'length' => 255,
+        'not null' => TRUE,
+        'type' => 'varchar',
+      ],
+      'claimed' => [
+        'default' => 0,
+        'not null' => TRUE,
+        'type' => 'int',
+      ],
+      'payment_id' => [
+        'default' => 0,
+        'not null' => TRUE,
+        'type' => 'int',
+      ],
+      'queue_id' => [
+        'length' => 255,
+        'not null' => TRUE,
+        'type' => 'varchar',
+      ],
+    ],
+    'primary key' => ['payment_id'],
+    'foreign keys' => [
+      'payment_id' => [
+        'table' => 'payment',
+        'columns' => [
+          'payment_id' => 'id',
+        ],
+      ],
+    ],
+    'indexes' => [
+      'category_id' => ['category_id'],
+      'queue_id' => ['queue_id'],
+    ],
+  ];
+
+  return $schema;
+}

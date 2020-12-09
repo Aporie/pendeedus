@@ -1,0 +1,4 @@
+payment_partially_refunded:
+  description: The payment has been completed, but some part has been refunded back to the payer.
+  label: Refunded Partially
+  parent_id: payment_money_transferred

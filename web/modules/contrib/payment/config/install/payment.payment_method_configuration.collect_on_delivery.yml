@@ -1,0 +1,13 @@
+id: collect_on_delivery
+label: 'Collect on delivery'
+ownerId: 1
+pluginConfiguration:
+  message_text: 'You will be charged upon delivery. Please make sure you have enough cash available.'
+  message_text_format: plain_text
+  execute_status_id: payment_pending
+  capture: true
+  capture_status_id: payment_success
+  refund: false
+  refund_status_id: payment_refunded
+pluginId: payment_basic
+status: false

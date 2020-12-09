@@ -1,0 +1,62 @@
+payment_authnet.authnet_profile.*:
+  type: config_entity
+  label: Authorize.net profile
+  mapping:
+    apiId:
+      type: text
+      label: API Login ID
+    apiTransactionKey:
+      type: text
+      label: Transaction Key
+    apiKey:
+      type: text
+      label: API Key
+    sandboxMode:
+      type: boolean
+      label: Sandbox Mode
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+
+plugin.plugin_configuration.payment_method_configuration.payment_authnet:
+  type: plugin.plugin_configuration.payment_method_configuration.payment_base
+  mapping:
+    brand_label:
+      label: Brand label
+      type: text
+    profile:
+      label: Authorize.net profile
+      type: text
+    execute_status_id:
+      label: Execute payment status
+      type: string
+    cancel_status_id:
+      label: Cancel payment status
+      type: string
+    cancel_zero_amount:
+      label: Zero Amount
+      type: boolean
+    capture:
+      label: Capture
+      type: boolean
+    capture_status_id:
+      label: Capture payment status
+      type: string
+    refund:
+      label: Refund
+      type: boolean
+    clone_refunded:
+      label: Clone payment entity for refund operations
+      type: boolean
+    refund_status_id:
+      label: Refund payment status
+      type: string
+    partial_refund:
+      label: Partial refund
+      type: boolean
+    partial_refund_status_id:
+      label: Partial refund payment status
+      type: string

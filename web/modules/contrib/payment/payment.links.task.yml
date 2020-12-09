@@ -1,0 +1,44 @@
+entity.payment.collection:
+  base_route: system.admin_content
+  route_name: entity.payment.collection
+  title: Payments
+
+payment.payment.collection_by_owner:
+  base_route: entity.user.canonical
+  route_name: payment.payment.collection_by_owner
+  title: Payments
+
+payment.payment.view:
+  base_route: entity.payment.canonical
+  route_name: entity.payment.canonical
+  title: 'View'
+
+payment.payment.update_status:
+  base_route: entity.payment.canonical
+  route_name: entity.payment.update_status_form
+  title: 'Update status'
+
+payment.payment.capture:
+  base_route: entity.payment.canonical
+  route_name: entity.payment.capture_form
+  title: 'Capture'
+
+payment.payment.refund:
+  base_route: entity.payment.canonical
+  route_name: entity.payment.refund_form
+  title: 'Refund'
+
+payment.payment_method.collection:
+  base_route: payment.payment_method.collection
+  route_name: payment.payment_method.collection
+  title: 'List'
+
+entity.payment_method_configuration.collection:
+  base_route: payment.payment_method.collection
+  route_name: entity.payment_method_configuration.collection
+  title: 'Configuration'
+
+payment.payment_type:
+  base_route: payment.payment_type
+  route_name: payment.payment_type
+  title: 'Configure'
