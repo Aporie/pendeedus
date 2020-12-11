@@ -16,7 +16,10 @@
     <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">{{ 'Profile informations'|t }}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-documents" role="tab" aria-controls="pills-documents" aria-selected="false">{{ 'Documents'|t }}</a>
+    <a class="nav-link" id="pills-documents-tab" data-toggle="pill" href="#pills-documents" role="tab" aria-controls="pills-documents" aria-selected="false">{{ 'Documents'|t }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-payments-tab" data-toggle="pill" href="#pills-payments" role="tab" aria-controls="pills-payments" aria-selected="false">{{ 'Payment methods'|t }}</a>
   </li>
 </ul>
 <div class="tab-content" id="pills-tabContent">
@@ -29,5 +32,9 @@
   <div class="tab-pane fade" id="pills-documents" role="tabpanel" aria-labelledby="pills-documents-tab">
     {{ build.documents }}
   </div>
+  <div class="tab-pane fade" id="pills-payments" role="tabpanel" aria-labelledby="pills-payments-tab">
+    <a href="{{ path('entity.commerce_payment_method.add_form', { user: user.id }) }}" alt="Add a new payment method" class="btn btn-danger mb-2">{{ 'Add a new payment method'|t }}</a>
+    {{ build.payment_methods }}
+  </div>
 </div>
-{{ build|without('user', 'vendor', 'documents') }}
+{{ build|without('user', 'vendor', 'documents', 'payment_methods') }}

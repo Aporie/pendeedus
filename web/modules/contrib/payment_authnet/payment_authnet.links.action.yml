@@ -1,5 +1,0 @@
-payment_authnet.authnet_profile.add:
-  route_name: payment_authnet.authnet_profile.add
-  title: 'Add Authorize.net profile'
-  appears_on:
-    - entity.authnet_profile.collection

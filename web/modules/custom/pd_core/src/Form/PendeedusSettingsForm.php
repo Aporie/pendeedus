@@ -89,6 +89,26 @@ class PendeedusSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('vendor_message')['value'],
     ];
 
+    $form['documents'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Documents'),
+      '#open' => TRUE,
+    ];
+
+    $form['documents']['#markup'] = $this->t('Manage documents options.');
+
+    $form['documents']['document_fee'] = [
+      '#type' => 'number',
+      '#min' => 0.0,
+      '#title' => $this->t('Document fee ($)'),
+      '#description' => $this->t('Fees charged for each document (USD).'),
+      '#step' => 0.01,
+      '#default_value' => $config->get('document_fee'),
+      '#size' => 30,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -99,6 +119,7 @@ class PendeedusSettingsForm extends ConfigFormBase {
     $this->config('pd_core.settings')
       ->set('employee_message', $form_state->getValue('employee_message'))
       ->set('vendor_message', $form_state->getValue('vendor_message'))
+      ->set('document_fee', $form_state->getValue('document_fee'))
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -20,9 +20,10 @@ function pd_request_preprocess_page(&$variables) {
 /**
  * Implements hook_entity_type_alter().
  */
-function pd_request_entity_type_alter(array &$entity_types) {
+function pd_request_entity_type_build(array &$entity_types) {
   $default_handler_class = $entity_types['doc_request']->getHandlerClasses()['form']['default'];
   $entity_types['doc_request']->setFormClass('process', $default_handler_class);
+  $entity_types['doc_request']->setClass('Drupal\pd_request\Entity\DocRequest');
 }
 
 /**
@@ -41,10 +42,24 @@ function pd_request_form_system_theme_settings_alter(&$form, FormStateInterface 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function pd_request_form_doc_request_doc_request_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function pd_request_form_doc_request_doc_request_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add custom validation handler.
+  $form['#validate'][] = 'pd_request_form_doc_request_doc_request_form_validate';
   // Alter button name.
   $form["actions"]["submit"]["#value"] = t('Submit');
   $form["actions"]["submit"]["#submit"][] = 'pd_request_form_doc_request_doc_request_form_submit';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function pd_request_form_doc_request_doc_request_form_validate($form, FormStateInterface $form_state) {
+  $payment_methods = \Drupal::entityTypeManager()->getStorage('commerce_payment_method')->loadByProperties([
+    'uid' => \Drupal::currentUser()->id(),
+  ]);
+  if (empty($payment_methods)) {
+    $form_state->setError($form['field_footer'], 'Please add at least one payment method before requesting a document.');
+  }
 }
 
 /**
@@ -132,22 +147,23 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
   /** @var \Drupal\eck\Form\Entity\EckEntityForm $callback_object */
   $callback_object = $form_state->getBuildInfo()['callback_object'];
 
-  $form['#action'] = '/requests?doc_request=' . $callback_object->getEntity()
-      ->id();
+  $form['#action'] = '/requests?doc_request=' . $callback_object->getEntity()->id();
   $form["actions"]["submit"]["#submit"][] = 'pd_request_form_doc_request_doc_request_process_form_submit';
 }
 
+/**
+ * Custom submit handler for doc_request_process_form.
+ */
 function pd_request_form_doc_request_doc_request_process_form_submit($form, FormStateInterface $form_state) {
+  // Create order.
+  \Drupal::service('pd_request.request_manager')->createOrder($form_state->getFormObject()->getEntity());
   $callback_object = $form_state->getBuildInfo()['callback_object'];
 
   $form_state->setRedirect('view.doc_requests.page_1', [], [
-    'query' => [
-      'doc_request' => $callback_object->getEntity()
-        ->id(),
+    'query' => ['doc_request' => $callback_object->getEntity()->id(),
     ],
   ]);
 }
-
 
 /**
  * Implements hook_view_pre_build().

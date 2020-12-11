@@ -1,7 +1,0 @@
-refund.calculate_amount:
-  js:
-    js/refund.calculate_amount.js: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.once
-    - core/drupalSettings

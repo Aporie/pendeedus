@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+{{ attach_library('bootstrap_barrio/form') }}
+<form{{ attributes }}>
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">{{ 'Request a document'|t }}</h2>
+      <div class="card-text">
+        {{ children }}
+      </div>
+    </div>
+  </div>
+</form>

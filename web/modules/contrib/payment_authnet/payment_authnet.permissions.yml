@@ -1,6 +1,0 @@
-administer payment authnet:
-  title: 'Administer Payment Authorize.net'
-  description: 'Perform adminstrative tasks for Authorize.net Payment.'
-  restrict access: TRUE
-payment.payment.void.any:
-  title: Cancel (Void) Authnet payments

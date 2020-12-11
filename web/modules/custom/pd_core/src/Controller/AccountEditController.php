@@ -6,7 +6,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Form\FormBuilder;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -98,8 +97,6 @@ class AccountEditController extends ControllerBase {
           ->getFormObject('profile', 'default')
           ->setEntity($profile);
         $build['vendor'] = $this->formBuilder->getForm($vendorFormObject);
-        //$build['vendor']['actions']['submit']['#value'] = $this->t('Update profile');
-        //$build['vendor']['actions']['submit']['#submit'][] = '::redirectHere';
       }
     }
 
@@ -118,10 +115,12 @@ class AccountEditController extends ControllerBase {
           ->getFormObject('profile', 'default')
           ->setEntity($profile);
       $build['documents'] = $this->formBuilder->getForm($documentsFormObject);
-      
-      //$build['documents']['actions']['submit']['#value'] = $this->t('Save documents');
-      //$build['documents']['actions']['submit']['#submit'][] = '::redirectHere';
     }
+    
+    /** @var \Drupal\commerce_payment\PaymentMethodListBuilderInterface $payment_methods_list_builder */
+    $payment_methods_list_builder = $this->entityTypeManager->getListBuilder('commerce_payment_method');
+    $payment_methods_list_builder->setUser(User::load($this->currentUser->id()));
+    $build['payment_methods'] = $payment_methods_list_builder->render();
 
     // Defines custom theme.
     $build['#theme'] = 'controller__account_edit';
