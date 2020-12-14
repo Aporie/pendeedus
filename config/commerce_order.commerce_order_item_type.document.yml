@@ -1,0 +1,10 @@
+uuid: 0a6888ea-fc2c-4c1a-9c6e-6e197ce12ec3
+langcode: en
+status: true
+dependencies: {  }
+label: Document
+id: document
+purchasableEntityType: doc_request
+orderType: document_request
+traits: {  }
+locked: false

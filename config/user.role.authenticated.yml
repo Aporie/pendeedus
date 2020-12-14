@@ -13,4 +13,8 @@ permissions:
   - 'access devel information'
   - 'access kint'
   - 'execute php code'
+  - 'manage own commerce_payment_method'
+  - 'view commerce_store'
+  - 'view online commerce_store'
+  - 'view own commerce_order'
   - 'view own profile'

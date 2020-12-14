@@ -1,6 +1,6 @@
 definitions:
   user__page:
-    enabled: false
+    enabled: true
     menu_name: backoffice
     parent: ''
     expanded: false

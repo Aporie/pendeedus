@@ -1,0 +1,18 @@
+uuid: 5852c6c3-0c70-4eca-8c5d-22792c1b74cd
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - commerce_order
+_core:
+  default_config_hash: zyTJjisGAiNCmSVzU73UWGY2joBWA3QXvlcjDDIuWcs
+id: order_default
+label: Default
+targetEntityType: commerce_order
+plugin: infinite
+configuration:
+  pattern: 'Req-[commerce_order:order_id]-[pattern:number]'
+  initial_number: 1
+  padding: 0
+  per_store_sequence: true

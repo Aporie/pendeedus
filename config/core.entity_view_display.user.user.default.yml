@@ -2,6 +2,8 @@ uuid: c864462c-b9cf-4941-989f-0e12e018261a
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.field.user.user.commerce_remote_id
   module:
     - user
 id: user.user.default
@@ -28,6 +30,8 @@ content:
       view_mode: default
     third_party_settings: {  }
 hidden:
+  commerce_remote_id: true
   coverage_profiles: true
+  customer_profiles: true
   member_for: true
   realname: true

@@ -1,0 +1,25 @@
+uuid: 2309ad4d-8226-47a7-ac92-7a81d6887cde
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_authnet
+id: pendeedus
+label: Pendeedus
+weight: null
+plugin: authorizenet_acceptjs
+configuration:
+  cca_status: false
+  cca_api_id: ''
+  cca_org_unit_id: ''
+  cca_api_key: ''
+  api_login: 4Fr2Jwf3c
+  transaction_key: 3P92Vb3fwyzN377V
+  client_key: 8kD4q29EXnS8d2htmsqW2JwHgGTBLUdTn3QcX2SGVb94QYLvSXj6MbJj9V92rF48
+  display_label: Authorize.net
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions: {  }
+conditionOperator: AND

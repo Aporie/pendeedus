@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.user.register
+    - field.field.user.user.commerce_remote_id
   module:
     - path
     - profile
@@ -45,4 +46,6 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
+  commerce_remote_id: true
+  customer_profiles: true
   documents_profiles: true

@@ -7,6 +7,13 @@ module:
   block_class: 0
   bootstrap_paragraphs: 0
   breakpoint: 0
+  commerce: 0
+  commerce_authnet: 0
+  commerce_number_pattern: 0
+  commerce_order: 0
+  commerce_payment: 0
+  commerce_price: 0
+  commerce_store: 0
   config_filter: 0
   config_split: 0
   context: 0
@@ -14,9 +21,11 @@ module:
   contextual: 0
   ctools: 0
   currency: 0
+  datetime: 0
   dblog: 0
   default_content: 0
   default_content_deploy: 0
+  devel_entity_updates: 0
   dynamic_page_cache: 0
   eck: 0
   email_registration: 0
@@ -51,7 +60,6 @@ module:
   page_cache: 0
   path: 0
   path_alias: 0
-  payment: 0
   pd_core: 0
   pd_coverage: 0
   pd_request: 0
@@ -68,6 +76,7 @@ module:
   serialization: 0
   shs: 0
   stage_file_proxy: 0
+  state_machine: 0
   system: 0
   taxonomy: 0
   term_csv_export_import: 0

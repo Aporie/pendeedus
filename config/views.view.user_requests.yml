@@ -597,7 +597,20 @@ display:
           entity_field: created
           plugin_id: date
       title: 'Purchase History'
-      header: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content:
+            value: '<h2>Purchase history</h2>'
+            format: full_html
+          plugin_id: text
       footer: {  }
       empty:
         area_text_custom:

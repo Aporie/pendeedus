@@ -18,6 +18,13 @@ permissions:
   - 'edit field_documents'
   - 'edit field_status'
   - 'execute php code'
+  - payment.payment.refund.any
+  - payment.payment.update_status.any
+  - payment.payment.view.any
+  - payment.payment.view.own
+  - payment.payment_method_configuration.update.own
+  - payment.payment_method_configuration.view.any
+  - payment.payment_method_configuration.view.own
   - 'rabbit hole bypass user'
   - 'update any coverage profile'
   - 'update any documents profile'
@@ -29,5 +36,6 @@ permissions:
   - 'view any documents profile'
   - 'view any profile'
   - 'view any vendor profile'
+  - 'view commerce_store'
   - 'view field_documents'
   - 'view own unpublished profile'

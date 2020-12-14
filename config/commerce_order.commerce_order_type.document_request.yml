@@ -1,0 +1,14 @@
+uuid: ad64088e-91c7-4e72-b0da-2864a5c107c7
+langcode: en
+status: true
+dependencies: {  }
+label: 'Document request'
+id: document_request
+workflow: order_default
+numberPattern: order_default
+refresh_mode: customer
+refresh_frequency: 300
+sendReceipt: true
+receiptBcc: pendeedus@mail.com
+traits: {  }
+locked: false

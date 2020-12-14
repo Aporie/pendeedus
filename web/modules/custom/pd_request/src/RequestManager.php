@@ -9,6 +9,7 @@ use Drupal\pd_request\Entity\DocRequest;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
+use Drupal\commerce_payment\Entity\Payment;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,7 +58,7 @@ class RequestManager implements RequestManagerInterface {
     );
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public function createOrder(DocRequest $doc_request) {
@@ -73,15 +74,16 @@ class RequestManager implements RequestManagerInterface {
     // Add the product variation to a new order.
     $order = Order::create([
       'type' => 'document_request',
-      'order_items' => [$order_item],
       'store_id' => $store->id(),
       'created' => REQUEST_TIME,
       'placed' => REQUEST_TIME,
+      'state' => 'draft',
     ]);
+    $order->save();
+    $order->addItem($order_item);
     $order->save();
 
     return $order;
   }
-
 
 }

@@ -2,8 +2,10 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\pd_request\DocRequestStateManager;
 use Drupal\user\Entity\User;
+use Drupal\pd_request\DocRequestStateManager;
+use Drupal\commerce_payment\Entity\Payment;
+use Drupal\commerce_order\Entity\Order;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -66,6 +68,12 @@ function pd_request_form_doc_request_doc_request_form_validate($form, FormStateI
  * Form submit callback.
  */
 function pd_request_form_doc_request_doc_request_form_submit($form, FormStateInterface $form_state) {
+  $doc_request = $form_state->getFormObject()->getEntity();
+  // Create order.
+  $order = \Drupal::service('pd_request.request_manager')->createOrder($doc_request);
+  $doc_request->setOrder($order);
+  $doc_request->save();
+  // Redirect.
   \Drupal::messenger()->addStatus(t('Document request has been submitted.'));
   $form_state->setRedirect('eck.entity.add', [
     'eck_entity_type' => 'doc_request',
@@ -155,10 +163,34 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
  * Custom submit handler for doc_request_process_form.
  */
 function pd_request_form_doc_request_doc_request_process_form_submit($form, FormStateInterface $form_state) {
-  // Create order.
-  \Drupal::service('pd_request.request_manager')->createOrder($form_state->getFormObject()->getEntity());
-  $callback_object = $form_state->getBuildInfo()['callback_object'];
+  $doc_request = $form_state->getFormObject()->getEntity();
+  $order = $doc_request->getOrder();
+  // Perform payment transaction.
+  if (!empty($form_state->getValue('field_documents'))) {
+    $payment_gateway = \Drupal::entityTypeManager()
+        ->getStorage('commerce_payment_gateway')
+        ->load('pendeedus');
 
+    $current_user = $order->getCustomerId();
+
+    $authnet = $payment_gateway->getPlugin();
+    $payment = Payment::create([
+      'payment_gateway' => $payment_gateway->id(),
+      'order_id' => $order->id(),
+      'payment_gateway_mode' => $authnet->getMode(),
+      'expires' => 0,
+      'state' => 'new',
+      'amount' => $order->getTotalPrice(),
+      'uid' => $current_user,
+    ]);
+    $payment->save();
+    $authnet->createPayment($payment);
+    // Perform payment.
+    $payment->setState('completed');
+    $payment->save();
+  }
+  // Redirect.
+  $callback_object = $form_state->getBuildInfo()['callback_object'];
   $form_state->setRedirect('view.doc_requests.page_1', [], [
     'query' => ['doc_request' => $callback_object->getEntity()->id(),
     ],

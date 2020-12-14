@@ -20,9 +20,14 @@ permissions:
   - 'edit own coverage_item entities'
   - 'execute php code'
   - 'manage coverage'
+  - payment.payment.view.own
+  - payment.payment_method_configuration.create.payment_authnet
+  - payment.payment_method_configuration.update.own
+  - payment.payment_method_configuration.view.own
   - 'update own coverage profile'
   - 'update own documents profile'
   - 'update own vendor profile'
+  - 'view commerce_store'
   - 'view own area_coverage entities'
   - 'view own coverage profile'
   - 'view own coverage_item entities'

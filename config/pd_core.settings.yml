@@ -4,3 +4,4 @@ employee_message:
 vendor_message:
   value: 'Here is the message for employee. <strong>And with html ?</strong>'
   format: full_html
+document_fee: '10'

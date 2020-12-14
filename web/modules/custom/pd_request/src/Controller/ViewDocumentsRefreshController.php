@@ -45,7 +45,7 @@ class ViewDocumentsRefreshController extends ControllerBase {
     $response = new AjaxResponse();
     $view = Views::getView('user_requests')->buildRenderable('block_1');
     if (!empty($view)) {
-      $response->addCommand(new ReplaceCommand('.block-views .views-element-container', $this->renderer->render($view)));
+      $response->addCommand(new ReplaceCommand('.views-element-container', $this->renderer->render($view)));
     }
 
     return $response;

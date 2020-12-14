@@ -7,6 +7,7 @@ use Drupal\eck\EckEntityInterface;
 use Drupal\core\Url;
 use Drupal\commerce_price\Price;
 use Drupal\commerce\PurchasableEntityInterface;
+use Drupal\commerce_order\Entity\Order;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -98,6 +99,36 @@ class DocRequest extends EckEntity implements EckEntityInterface, PurchasableEnt
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setOrder(Order $order) {
+    $this->set('order', $order->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrder() {
+    return $this->get('order')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrderId() {
+    return $this->get('order')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOrderId($order_id) {
+    $this->set('order', $order_id);
+    return $this;
+  }
+
+  /**
    * Generates the document request title.
    *
    * @return string
@@ -109,9 +140,9 @@ class DocRequest extends EckEntity implements EckEntityInterface, PurchasableEnt
       return '';
     }
 
-    return $this->t('Document request <a href="@url">@id</a>', [
+    return $this->t('Document request N°@id', [
       '@id' => $this->id(),
-      '@url' => Url::fromRoute('entity.doc_request.canonical', ['doc_request' => $this->id()]),
+      //'@url' => Url::fromRoute('entity.doc_request.canonical', ['doc_request' => $this->id()])->toString(),
     ]);
   }
 
@@ -161,6 +192,15 @@ class DocRequest extends EckEntity implements EckEntityInterface, PurchasableEnt
         'type' => 'commerce_price_default',
         'weight' => 0,
       ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+    
+    $fields['order'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Order'))
+      ->setDescription(t('The attached order.'))
+      ->setRequired(TRUE)
+      ->setCardinality(1)
+      ->setSetting('target_type', 'commerce_order')
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 

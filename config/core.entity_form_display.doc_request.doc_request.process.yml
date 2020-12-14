@@ -54,5 +54,9 @@ hidden:
   field_note: true
   field_page: true
   field_workflow: true
+  order: true
   path: true
+  price: true
+  sku: true
+  stores: true
   uid: true
