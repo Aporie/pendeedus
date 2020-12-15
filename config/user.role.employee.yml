@@ -7,6 +7,8 @@ label: Employee
 weight: 3
 is_admin: null
 permissions:
+  - 'access commerce administration pages'
+  - 'access commerce_order overview'
   - 'access devel information'
   - 'access doc_request workflow_transition form'
   - 'access kint'
@@ -29,6 +31,7 @@ permissions:
   - 'update any coverage profile'
   - 'update any documents profile'
   - 'update any vendor profile'
+  - 'update document_request commerce_order'
   - 'view any area_coverage entities'
   - 'view any coverage profile'
   - 'view any coverage_item entities'
@@ -37,5 +40,6 @@ permissions:
   - 'view any profile'
   - 'view any vendor profile'
   - 'view commerce_store'
+  - 'view document_request commerce_order'
   - 'view field_documents'
   - 'view own unpublished profile'
