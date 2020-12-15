@@ -22,10 +22,10 @@ class DocRequestStateManager {
   const STATE_CHARGED = 'doc_request_charged';
 
   /** @var EckEntity */
-  protected $request;
+  protected $doc_request;
 
-  public function __construct(EckEntity $request) {
-    $this->request = $request;
+  public function __construct(EckEntity $doc_request) {
+    $this->doc_request = $doc_request;
   }
 
   public function processUpdate() {
@@ -35,48 +35,39 @@ class DocRequestStateManager {
   }
 
   protected function getNewState() {
-    $request = $this->request;
+    $doc_request = $this->doc_request;
 
     // If inserted, skip.
-    if (empty($request->original)) {
+    if (empty($doc_request->original)) {
       return NULL;
     }
 
-    /** @var EckEntity $original */
-    $original = $request->original;
-
     // If is set to not available, set Not Available.
-    if ($request->get('field_not_available')->getString()) {
+    if ($doc_request->get('field_not_available')->getString()) {
       return self::STATE_NOT_AVAILABLE;
     }
 
-    // If document is submitted (and was not), set to Completed.
-    // If document submitted and Additionl fee is set, set to additional fee.
-    if ($request->get('field_documents')->getString()
-      && !$original->get('field_documents')->getString()
-    ) {
-      return $request->get('field_additional_fee')->getString()
-        ? self::STATE_ADDITIONAL_FEE
-        : self::STATE_COMPLETED;
+    // If additional fee.
+    if ($doc_request->get('field_additional_fee')->getString()) {
+      return self::STATE_ADDITIONAL_FEE;
     }
 
-    else {
-      return self::STATE_PENDING;
+    if ($doc_request->get('field_document')->getString()) {
+      return self::STATE_COMPLETED;
     }
 
-    // TODO Add other cases here.
-    return NULL;
+    return self::STATE_PENDING;
   }
 
   public function setState($new_sid, $comment = '') {
     $field_name = 'field_workflow';
-    $request = $this->request;
+    $doc_request = $this->doc_request;
 
-    $request->set($field_name, $new_sid);
+    $doc_request->set($field_name, $new_sid);
 
     return;
 
-    $current_sid = $request->get($field_name)->value;
+    $current_sid = $doc_request->get($field_name)->value;
 
     if ($current_sid == $new_sid) {
       return;
@@ -86,7 +77,7 @@ class DocRequestStateManager {
       $current_sid,
       'field_name' => $field_name,
     ]);
-    $transition->setTargetEntity($request);
+    $transition->setTargetEntity($doc_request);
     $transition->setValues($new_sid, \Drupal::currentUser()
       ->id(), \Drupal::time()
       ->getRequestTime(), $comment, TRUE);

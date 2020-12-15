@@ -4,8 +4,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\pd_request\DocRequestStateManager;
-use Drupal\commerce_payment\Entity\Payment;
-use Drupal\commerce_order\Entity\Order;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -53,13 +51,18 @@ function pd_request_form_doc_request_doc_request_form_alter(&$form, FormStateInt
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Custom validation handler.
  */
 function pd_request_form_doc_request_doc_request_form_validate($form, FormStateInterface $form_state) {
-  $payment_methods = \Drupal::entityTypeManager()->getStorage('commerce_payment_method')->loadByProperties([
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $payment_methods = $entity_type_manager->getStorage('commerce_payment_method')->loadByProperties([
     'uid' => \Drupal::currentUser()->id(),
   ]);
-  if (empty($payment_methods)) {
+  $billing_profiles = $entity_type_manager->getStorage('profile')->loadByProperties([
+    'type' => 'customer',
+    'uid' => \Drupal::currentUser()->id(),
+  ]);
+  if (empty($billing_profiles) || empty($payment_methods)) {
     $form_state->setError($form['field_footer'], 'Please add at least one payment method before requesting a document.');
   }
 }
@@ -154,9 +157,27 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
 
   /** @var \Drupal\eck\Form\Entity\EckEntityForm $callback_object */
   $callback_object = $form_state->getBuildInfo()['callback_object'];
-
+  // Remove submit handler if completed.
+  $has_document = !empty($form['field_documents']['widget'][0]['#default_value']['target_id']);
+  $is_cancelled = !empty($form['field_not_available']['widget']['value']['#default_value']);
+  if ($has_document || $is_cancelled) {
+    $form['actions']['submit']['#access'] = FALSE;
+  }
   $form['#action'] = '/requests?doc_request=' . $callback_object->getEntity()->id();
+  // Add custom validation handler.
+  $form['#validate'][] = 'pd_request_form_doc_request_doc_request_process_form_validate';
+  // Add custom submit handler.
   $form["actions"]["submit"]["#submit"][] = 'pd_request_form_doc_request_doc_request_process_form_submit';
+}
+
+/**
+ * Custom validation handler.
+ */
+function pd_request_form_doc_request_doc_request_process_form_validate($form, FormStateInterface $form_state) {
+  // Not allow to request more fee and add a document.
+  if ($form_state->getValue('field_additional_fee')[0]['value'] && !empty($form_state->getValue('field_documents')[0]['fids'])) {
+    $form_state->setError($form['field_additional_fee'], 'You cannot add fees and upload a document.');
+  }
 }
 
 /**
@@ -164,30 +185,15 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
  */
 function pd_request_form_doc_request_doc_request_process_form_submit($form, FormStateInterface $form_state) {
   $doc_request = $form_state->getFormObject()->getEntity();
-  $order = $doc_request->getOrder();
+  // Cancel order if not available.
+  if ($form_state->getValue('field_not_available')['value']) {
+    $order = $doc_request->getOrder();
+    $order->getState()->applyTransitionById('cancel');
+    $order->save();
+  }
   // Perform payment transaction.
-  if (!empty($form_state->getValue('field_documents'))) {
-    $payment_gateway = \Drupal::entityTypeManager()
-        ->getStorage('commerce_payment_gateway')
-        ->load('pendeedus');
-
-    $current_user = $order->getCustomerId();
-
-    $authnet = $payment_gateway->getPlugin();
-    $payment = Payment::create([
-      'payment_gateway' => $payment_gateway->id(),
-      'order_id' => $order->id(),
-      'payment_gateway_mode' => $authnet->getMode(),
-      'expires' => 0,
-      'state' => 'new',
-      'amount' => $order->getTotalPrice(),
-      'uid' => $current_user,
-    ]);
-    $payment->save();
-    $authnet->createPayment($payment);
-    // Perform payment.
-    $payment->setState('completed');
-    $payment->save();
+  else if (!empty($form_state->getValue('field_documents')[0]['fids'])) {
+    \Drupal::service('pd_request.request_manager')->performPayment($doc_request);
   }
   // Redirect.
   $callback_object = $form_state->getBuildInfo()['callback_object'];

@@ -86,4 +86,46 @@ class RequestManager implements RequestManagerInterface {
     return $order;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function performPayment(DocRequest $doc_request) {
+    $order = $doc_request->getOrder();
+    $payment_gateway = $this->entityTypeManager->getStorage('commerce_payment_gateway')->load('pendeedus');
+
+    // Get doc request author and payment method.
+    $user_uid = $order->getCustomerId();
+    $payment_methods = $this->entityTypeManager->getStorage('commerce_payment_method')->loadByProperties([
+      'uid' => $user_uid,
+      'reusable' => TRUE,
+    ]);
+    // @TODO select default payment method.
+    $payment_method = reset($payment_methods);
+
+    // Execute payment.
+    $authnet = $payment_gateway->getPlugin();
+    $payment = Payment::create([
+      'payment_gateway' => $payment_gateway->id(),
+      'order_id' => $order->id(),
+      'payment_gateway_mode' => $authnet->getMode(),
+      'payment_method' => $payment_method->id(),
+      'remote_id' => $payment_method->getRemoteId(),
+      'expires' => 0,
+      'state' => 'new',
+      'amount' => $order->getTotalPrice(),
+      'uid' => $user_uid,
+    ]);
+    $payment->save();
+    $authnet->createPayment($payment);
+    // Set payment and order as completed.
+    $payment->setState('completed');
+    $payment->save();
+    $order->setBillingProfile($payment_method->getBillingProfile());
+    $order->getState()->applyTransitionById('place');
+    $order->save();
+    // Set doc request as completed.
+    $doc_request->set('field_workflow', 'doc_request_completed');
+    $doc_request->save();
+  }
+
 }
