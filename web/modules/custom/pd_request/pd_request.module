@@ -94,51 +94,6 @@ function pd_request_doc_request_presave(Drupal\Core\Entity\EntityInterface $enti
   $manager->processUpdate();
 }
 
-/**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function pd_request_doc_request_insert(Drupal\Core\Entity\EntityInterface $entity) {
-  pd_request_doc_request_update($entity);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update().
- */
-function pd_request_doc_request_update(Drupal\Core\Entity\EntityInterface $entity) {
-  /** @var \Drupal\eck\Entity\EckEntity $entity */
-  if (\Drupal::moduleHandler()->moduleExists('nodejs')) {
-    $message = (object) array(
-      'channel' => 'nodejs_user_' . $entity->getOwnerId(),
-      'callback' => 'pdRequest',
-    );
-
-    nodejs_enqueue_message($message);
-
-    $message = (object) array(
-      'channel' => 'employee',
-      'callback' => 'pdRequest',
-    );
-
-    nodejs_enqueue_message($message);
-  }
-}
-
-/**
- * Implements hook_nodejs_user_channels().
- */
-function pd_request_nodejs_user_channels($auth_user) {
-  \Drupal::logger(__FUNCTION__)->info(print_r($auth_user, 1));
-  if (!empty($auth_user->uid)) {
-    /** @var User $account */
-    $account = User::load($auth_user->uid);
-    if ($account->hasRole('employee') || $account->hasRole('administrator')) {
-      return ['employee'];
-    }
-  }
-
-  return [];
-}
-
 function delete_old_entity_type() {
   foreach (entity_load_multiple('request') as $entity) {
     $entity->delete();
@@ -207,13 +162,15 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
  * Implements hook_view_pre_build().
  */
 function pd_request_views_pre_render(ViewExecutable $view) {
-  // Attach requets.js
+  // Request page.
   if ($view->id() == 'doc_requests' && $view->current_display == 'page_1') {
+    // Attach requets.js
     $view->element['#attached']['library'][] = 'pd_request/requests';
     $view->element['#attached']['drupalSettings']['pd_request']['refresh_path'] = Url::fromRoute('pd_request.requests_refresh')->toString();
   }
-  // Attach documents.js
-  if ($view->id() == 'user_requests' && $view->current_display == 'block_1') {  
+  // Document page.
+  if ($view->id() == 'user_requests' && $view->current_display == 'block_1') {
+    // Attach documents.js
     $view->element['#attached']['library'][] = 'pd_request/documents';
     $view->element['#attached']['drupalSettings']['pd_request']['refresh_path'] = Url::fromRoute('pd_request.documents_refresh')->toString();
   }

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - eck.eck_type.doc_request.doc_request
+    - field.storage.doc_request.field_additional_fee
     - field.storage.doc_request.field_area
     - field.storage.doc_request.field_book
     - field.storage.doc_request.field_documents
@@ -443,6 +444,72 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        field_additional_fee:
+          id: field_additional_fee
+          table: doc_request__field_additional_fee
+          field: field_additional_fee
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Additional fee'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_decimal
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+            decimal_separator: .
+            scale: 2
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
         field_workflow:
           id: field_workflow
           table: doc_request__field_workflow
@@ -549,7 +616,7 @@ display:
           element_wrapper_type: '0'
           element_wrapper_class: ''
           element_default_classes: false
-          empty: '{{ field_workflow }}'
+          empty: "{% if field_workflow == 'Additional fee' %}\r\n{{ field_workflow }}: {{ field_additional_fee }} <a href=\"\">Pay</a>\r\n{% else %}\r\n{{ field_workflow }}\r\n{% endif %}"
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
@@ -683,6 +750,7 @@ display:
         - user
         - user.permissions
       tags:
+        - 'config:field.storage.doc_request.field_additional_fee'
         - 'config:field.storage.doc_request.field_area'
         - 'config:field.storage.doc_request.field_book'
         - 'config:field.storage.doc_request.field_documents'
@@ -706,6 +774,7 @@ display:
         - user
         - user.permissions
       tags:
+        - 'config:field.storage.doc_request.field_additional_fee'
         - 'config:field.storage.doc_request.field_area'
         - 'config:field.storage.doc_request.field_book'
         - 'config:field.storage.doc_request.field_documents'

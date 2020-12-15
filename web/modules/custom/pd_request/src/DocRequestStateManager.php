@@ -52,7 +52,7 @@ class DocRequestStateManager {
       return self::STATE_ADDITIONAL_FEE;
     }
 
-    if ($doc_request->get('field_document')->getString()) {
+    if ($doc_request->get('field_documents')->getString()) {
       return self::STATE_COMPLETED;
     }
 
