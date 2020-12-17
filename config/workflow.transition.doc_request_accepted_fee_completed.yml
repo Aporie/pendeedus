@@ -11,9 +11,7 @@ module: workflow
 from_sid: doc_request_accepted_fee
 to_sid: doc_request_completed
 roles:
-  workflow_author: '0'
-  anonymous: '0'
-  authenticated: '0'
+  workflow_author: workflow_author
   vendor: '0'
   employee: '0'
   administrator: '0'

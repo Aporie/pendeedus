@@ -8,6 +8,7 @@ dependencies:
     - field.field.doc_request.doc_request.field_additional_fee
     - field.field.doc_request.doc_request.field_area
     - field.field.doc_request.doc_request.field_book
+    - field.field.doc_request.doc_request.field_coverage_type
     - field.field.doc_request.doc_request.field_documents
     - field.field.doc_request.doc_request.field_email_copy_in_addition
     - field.field.doc_request.doc_request.field_footer
@@ -30,9 +31,15 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
+  field_coverage_type:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_documents:
     type: file_generic
-    weight: 1
+    weight: 3
     region: content
     settings:
       progress_indicator: throbber

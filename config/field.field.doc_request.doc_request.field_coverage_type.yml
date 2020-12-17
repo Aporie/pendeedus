@@ -1,0 +1,29 @@
+uuid: d9b21980-18d6-47de-9ab8-40821102b4a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.doc_request.doc_request
+    - field.storage.doc_request.field_coverage_type
+    - taxonomy.vocabulary.coverage
+id: doc_request.doc_request.field_coverage_type
+field_name: field_coverage_type
+entity_type: doc_request
+bundle: doc_request
+label: 'Coverage type'
+description: 'Optionally specify a product coverage type. If none is set default fee will be used.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      coverage: coverage
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

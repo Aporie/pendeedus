@@ -101,7 +101,7 @@ class PendeedusSettingsForm extends ConfigFormBase {
       '#type' => 'number',
       '#min' => 0.0,
       '#title' => $this->t('Document fee ($)'),
-      '#description' => $this->t('Fees charged for each document (USD).'),
+      '#description' => $this->t('Default fees charged for each document (USD).'),
       '#step' => 0.01,
       '#default_value' => $config->get('document_fee'),
       '#size' => 30,

@@ -2,7 +2,8 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\user\Entity\User;
+use Drupal\commerce_order\Adjustment;
+use Drupal\commerce_price\Price;
 use Drupal\pd_request\DocRequestStateManager;
 use Drupal\views\ViewExecutable;
 
@@ -116,7 +117,7 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
   $has_document = !empty($form['field_documents']['widget'][0]['#default_value']['target_id']);
   $is_cancelled = !empty($form['field_not_available']['widget']['value']['#default_value']);
   if ($has_document || $is_cancelled) {
-    $form['actions']['submit']['#access'] = FALSE;
+    //$form['actions']['submit']['#access'] = FALSE;
   }
   $form['#action'] = '/requests?doc_request=' . $callback_object->getEntity()->id();
   // Add custom validation handler.
@@ -130,8 +131,8 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
  */
 function pd_request_form_doc_request_doc_request_process_form_validate($form, FormStateInterface $form_state) {
   // Not allow to request more fee and add a document.
-  if ($form_state->getValue('field_additional_fee')[0]['value'] && !empty($form_state->getValue('field_documents')[0]['fids'])) {
-    $form_state->setError($form['field_additional_fee'], 'You cannot add fees and upload a document.');
+  if ($form_state->getValue('field_additional_fee')[0]['value'] && empty($form_state->getValue('field_documents')[0]['fids'])) {
+    $form_state->setError($form['field_additional_fee'], 'Please upload a document before saving.');
   }
 }
 
@@ -146,9 +147,30 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
     $order->getState()->applyTransitionById('cancel');
     $order->save();
   }
+  // Additional fee.
+  else if ($fee = $form_state->getValue('field_additional_fee')[0]['value']) {
+    $order = $doc_request->getOrder();
+    $adjustment = new Adjustment([
+      'label' => t('Additional fee'),
+      'type' => 'fee',
+      'amount' => new Price($fee, 'USD'),
+      'locked' => TRUE,
+    ]);
+    $order->setAdjustments([$adjustment]);
+    $order->save();
+  }
   // Perform payment transaction.
   else if (!empty($form_state->getValue('field_documents')[0]['fids'])) {
-    \Drupal::service('pd_request.request_manager')->performPayment($doc_request);
+    $request_manager = \Drupal::service('pd_request.request_manager');
+    $amount = $request_manager->getDocRequestFee($doc_request, $form_state->getValue('field_coverage_type')[0]['target_id']);
+    $order = $doc_request->getOrder();
+    $order_items = $order->getItems();
+    $order_item = reset($order_items);
+    $order_item->setUnitPrice(new Price($amount, 'USD'), TRUE);
+    $order_item->save();
+    $order->recalculateTotalPrice();
+    $order->save();
+    $request_manager->performPayment($doc_request);
   }
   // Redirect.
   $callback_object = $form_state->getBuildInfo()['callback_object'];

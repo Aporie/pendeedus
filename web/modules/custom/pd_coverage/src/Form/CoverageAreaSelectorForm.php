@@ -95,7 +95,7 @@ class CoverageAreaSelectorForm extends FormBase {
         $selected_county = $input['county'];
         $selected_state = Term::load($selected_county)->parent->getString();
 
-        // When coverage area is submitted, let's set default values in this firm.
+        // When coverage area is submitted, let's set default values in this form.
         $form['selector']['state']['#default_value'] = $selected_state;
         $form['selector']['county']['#default_value'] = $selected_county;
       }
@@ -131,7 +131,7 @@ class CoverageAreaSelectorForm extends FormBase {
     if ($selected_county && $term = Term::load($selected_county)) {
       $storage = \Drupal::entityTypeManager()->getStorage('area_coverage');
 
-      $area_ids = $this->getCoverageIdByArea($term->id());
+      $area_ids = \Drupal::service('pd_coverage.coverage_area_price_manager')->getCoverageIdByArea($term->id());
 
       if ($area_ids) {
         $entity = $storage->load(reset($area_ids));
@@ -181,7 +181,7 @@ class CoverageAreaSelectorForm extends FormBase {
         '#markup' => '<div id="coverage-form">' . t('Please select a state and county to edit coverage details.') . '</div>',
       ];
     }
-
+    
     return $form;
   }
 
@@ -214,8 +214,8 @@ class CoverageAreaSelectorForm extends FormBase {
 
       foreach ($copy_tids as $copy_tid) {
         $storage = \Drupal::entityTypeManager()->getStorage('area_coverage');
-
-        if ($area_ids = $this->getCoverageIdByArea($copy_tid)) {
+        
+        if ($area_ids = \Drupal::service('pd_coverage.coverage_area_price_manager')->getCoverageIdByArea($copy_tid)) {
           $entity = $storage->load(reset($area_ids));
           $op = 'edit';
         }
@@ -223,6 +223,7 @@ class CoverageAreaSelectorForm extends FormBase {
           $entity = $storage->create([
             'type' => 'area_coverage',
             'field_area' => $copy_tid,
+            'uid' => in_array('employee', \Drupal::currentUser()->getRoles()) ? 1 : \Drupal::currentUser()->id(),
           ]);
           $op = 'add';
         }
@@ -248,13 +249,6 @@ class CoverageAreaSelectorForm extends FormBase {
     $copy_form_state->addBuildInfo('args', [$entity, $op]);
     \Drupal::formBuilder()
       ->submitForm('\\Drupal\\pd_coverage\\Form\\CoverageAreaCopyForm', $copy_form_state);
-  }
-
-  protected function getCoverageIdByArea($county_id) {
-    return \Drupal::entityQuery('area_coverage')
-      ->condition('uid', \Drupal::currentUser()->id())
-      ->condition('field_area', $county_id)
-      ->execute();
   }
 
   protected function cleanInput(FormStateInterface $form_state) {

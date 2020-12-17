@@ -1,0 +1,7 @@
+services:
+  pd_coverage.coverage_area_price_manager:
+    class: Drupal\pd_coverage\CoverageAreaPriceManager
+    arguments: ['@entity_type.manager', '@current_user']
+    tags:
+      - { name: pd_request_manager }
+

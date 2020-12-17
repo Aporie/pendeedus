@@ -13,13 +13,20 @@ permissions:
   - 'access doc_request workflow_transition form'
   - 'access kint'
   - 'access user profiles'
+  - 'create area_coverage entities'
   - 'create coverage profile'
+  - 'create coverage_item entities'
   - 'create doc_request workflow_transition'
   - 'create documents profile'
   - 'create vendor profile'
+  - 'edit any area_coverage entities'
+  - 'edit any coverage_item entities'
   - 'edit field_documents'
   - 'edit field_status'
+  - 'edit own area_coverage entities'
+  - 'edit own coverage_item entities'
   - 'execute php code'
+  - 'manage coverage'
   - payment.payment.refund.any
   - payment.payment.update_status.any
   - payment.payment.view.any

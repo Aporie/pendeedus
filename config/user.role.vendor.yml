@@ -28,6 +28,7 @@ permissions:
   - 'update own documents profile'
   - 'update own vendor profile'
   - 'view commerce_store'
+  - 'view document_request commerce_order'
   - 'view own area_coverage entities'
   - 'view own coverage profile'
   - 'view own coverage_item entities'

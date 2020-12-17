@@ -49,7 +49,6 @@ class ViewDocumentsRefreshController extends ControllerBase {
     }
 
     return $response;
-
   }
 
 }

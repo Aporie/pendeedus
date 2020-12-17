@@ -1,0 +1,24 @@
+uuid: fc928b6d-3bda-4af7-8da9-7460e2d18892
+langcode: en
+status: true
+dependencies:
+  module:
+    - eck
+    - field_permissions
+    - taxonomy
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: doc_request.field_coverage_type
+field_name: field_coverage_type
+entity_type: doc_request
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

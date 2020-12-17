@@ -25,3 +25,17 @@ pd_request.documents_refresh:
   requirements:
     _role: 'authenticated'
     _format: json
+pd_request.additional_fee:
+  path: '/documents/{doc_request}/pay-additional-fee'
+  methods: ['POST']
+  defaults:
+    _title: 'Pay additional fee'
+    _controller: 'pd_request.request_manager:payAdditionalFee'
+  requirements:
+    _role: 'authenticated'
+    _format: json
+  options:
+    parameters:
+      doc_request:
+        type: entity:doc_request
+

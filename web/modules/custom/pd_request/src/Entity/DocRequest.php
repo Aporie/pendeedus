@@ -213,7 +213,7 @@ class DocRequest extends EckEntity implements EckEntityInterface, PurchasableEnt
    * @see ::baseFieldDefinitions()
    *
    * @return \Drupal\commerce_price\Price;
-   *   The default price for ducument.
+   *   The default price for document.
    */
   public static function getDefaultPrice() {
     $price = \Drupal::configFactory()->get('pd_core.settings')->get('document_fee');

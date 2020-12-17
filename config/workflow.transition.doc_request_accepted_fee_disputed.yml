@@ -12,8 +12,6 @@ from_sid: doc_request_accepted_fee
 to_sid: doc_request_disputed
 roles:
   workflow_author: '0'
-  anonymous: '0'
-  authenticated: '0'
   vendor: '0'
   employee: '0'
   administrator: '0'

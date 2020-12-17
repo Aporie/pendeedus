@@ -5,6 +5,7 @@ dependencies:
   module:
     - commerce_order
     - commerce_price
+    - eck
 _core:
   default_config_hash: edbjnD4WS8hc4E2tVUMHud2LIJrB_rTmetPv96MIFVI
 id: commerce_order_item_table
@@ -169,6 +170,59 @@ display:
           entity_type: null
           entity_field: title
           plugin_id: field
+        view_doc_request:
+          id: view_doc_request
+          table: doc_request
+          field: view_doc_request
+          relationship: doc_request
+          group_type: group
+          admin_label: ''
+          label: 'Doc request'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: false
+          absolute: false
+          entity_type: doc_request
+          plugin_id: entity_link
         unit_price__number:
           id: unit_price__number
           table: commerce_order_item
@@ -385,7 +439,17 @@ display:
           tokenize: false
           content: 'There are no order items yet.'
           plugin_id: text_custom
-      relationships: {  }
+      relationships:
+        doc_request:
+          id: doc_request
+          table: commerce_order_item
+          field: doc_request
+          relationship: none
+          group_type: group
+          admin_label: Request
+          required: false
+          entity_type: commerce_order_item
+          plugin_id: standard
       arguments:
         order_id:
           id: order_id

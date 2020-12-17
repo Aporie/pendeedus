@@ -5,7 +5,7 @@ services:
       - { name: event_subscriber }
   pd_request.request_manager:
     class: Drupal\pd_request\RequestManager
-    arguments: ['@entity_type.manager', '@current_user', '@config.factory']
+    arguments: ['@entity_type.manager', '@current_user', '@pd_coverage.coverage_area_price_manager', '@config.factory']
     tags:
       - { name: pd_request_manager }
 

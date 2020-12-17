@@ -24,16 +24,25 @@ class DocRequestStateManager {
   /** @var EckEntity */
   protected $doc_request;
 
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(EckEntity $doc_request) {
     $this->doc_request = $doc_request;
   }
-
+  
+  /**
+   * {@inheritdoc}
+   */
   public function processUpdate() {
     if ($new_sid = $this->getNewState()) {
       $this->setState($new_sid);
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getNewState() {
     $doc_request = $this->doc_request;
 
@@ -49,7 +58,12 @@ class DocRequestStateManager {
 
     // If additional fee.
     if ($doc_request->get('field_additional_fee')->getString()) {
-      return self::STATE_ADDITIONAL_FEE;
+      if ($doc_request->get('field_workflow')->getString() == self::STATE_ACCEPTED_FEE) {
+        return self::STATE_COMPLETED;
+      }
+      else {
+        return self::STATE_ADDITIONAL_FEE;
+      }
     }
 
     if ($doc_request->get('field_documents')->getString()) {
@@ -59,6 +73,9 @@ class DocRequestStateManager {
     return self::STATE_PENDING;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setState($new_sid, $comment = '') {
     $field_name = 'field_workflow';
     $doc_request = $this->doc_request;

@@ -1,1 +1,21 @@
 <?php
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function pd_coverage_area_coverage_insert(EntityInterface $entity) {
+  $uid = in_array('employee', \Drupal::currentUser()->getRoles()) ? 1 : \Drupal::currentUser()->id();
+  $entity->setOwnerId($uid);
+  $entity->save();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function pd_coverage_coverage_item_insert(EntityInterface $entity) {
+  $uid = in_array('employee', \Drupal::currentUser()->getRoles()) ? 1 : \Drupal::currentUser()->id();
+  $entity->setOwnerId($uid);
+  $entity->save();
+}
