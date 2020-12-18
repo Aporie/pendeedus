@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\Renderer;
 use Drupal\views\Views;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ViewDocumentsRefreshController extends ControllerBase {
@@ -44,6 +45,7 @@ class ViewDocumentsRefreshController extends ControllerBase {
   public function view() {
     $response = new AjaxResponse();
     $view = Views::getView('user_requests')->buildRenderable('block_1');
+    // @TODO set the pager before loading.
     if (!empty($view)) {
       $response->addCommand(new ReplaceCommand('.views-element-container', $this->renderer->render($view)));
     }

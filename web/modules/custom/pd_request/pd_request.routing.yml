@@ -38,4 +38,17 @@ pd_request.additional_fee:
     parameters:
       doc_request:
         type: entity:doc_request
+pd_request.dispute:
+  path: '/documents/{doc_request}/dispute'
+  methods: ['POST']
+  defaults:
+    _title: 'Dispute a request'
+    _controller: '\Drupal\pd_request\Controller\DocRequestDisputeController::view'
+  requirements:
+    _role: 'authenticated'
+    _format: json
+  options:
+    parameters:
+      doc_request:
+        type: entity:doc_request
 

@@ -17,6 +17,8 @@ class DocRequestStateManager {
 
   const STATE_ACCEPTED_FEE = 'doc_request_accepted_fee';
 
+  const STATE_DISPUTE = 'doc_request_dispute';
+
   const STATE_DISPUTED = 'doc_request_disputed';
 
   const STATE_CHARGED = 'doc_request_charged';
@@ -49,6 +51,13 @@ class DocRequestStateManager {
     // If inserted, skip.
     if (empty($doc_request->original)) {
       return NULL;
+    }
+    
+    if ($doc_request->get('field_workflow')->getString() == self::STATE_DISPUTE) {
+      return self::STATE_DISPUTE;
+    }
+    if ($doc_request->get('field_workflow')->getString() == self::STATE_DISPUTED) {
+      return self::STATE_DISPUTED;
     }
 
     // If is set to not available, set Not Available.

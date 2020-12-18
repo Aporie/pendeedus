@@ -8,7 +8,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\pd_coverage\CoverageAreaPriceManagerInterface;
 use Drupal\pd_request\Controller\ViewDocumentsRefreshController;
 use Drupal\pd_request\Entity\DocRequest;
-use Drupal\commerce_price\Calculator;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
@@ -21,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class RequestManager implements RequestManagerInterface {
 
-   /**
+  /**
    * Defines variables to be used later.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface

@@ -5,6 +5,7 @@ requests:
   dependencies:
     - core/jquery
     - core/drupalSettings
+    - core/drupal.dialog.ajax
 documents:
   version: VERSION
   js:
@@ -12,3 +13,4 @@ documents:
   dependencies:
     - core/jquery
     - core/drupalSettings
+    - core/drupal.dialog.ajax

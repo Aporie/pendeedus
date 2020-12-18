@@ -17,3 +17,12 @@
 tr.status--Pending {
     background-color: $yellow !important;
 }
+
+tr.status--Dispute {
+    color: $white;
+    background-color: $red !important;
+}
+
+tr.status--Dispute a {
+    color: $yellow;
+}

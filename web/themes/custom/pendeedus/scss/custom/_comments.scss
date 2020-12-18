@@ -1,0 +1,21 @@
+.comment {
+  display: block;
+
+  &__employee {
+    background-color: $light;
+  }
+
+  &__employee:before {
+    right: auto;
+    left: 99.5%;
+    border-right: none;
+    border-left: 1.25em solid #ccc;
+  }
+
+  &__employee:after {
+    right: auto;
+    left: 99.5%;
+    border-right: none;
+    border-left: 1.24em solid $light;
+  }
+}

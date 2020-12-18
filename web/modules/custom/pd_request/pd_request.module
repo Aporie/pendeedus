@@ -162,14 +162,17 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
   // Perform payment transaction.
   else if (!empty($form_state->getValue('field_documents')[0]['fids'])) {
     $request_manager = \Drupal::service('pd_request.request_manager');
-    $amount = $request_manager->getDocRequestFee($doc_request, $form_state->getValue('field_coverage_type')[0]['target_id']);
-    $order = $doc_request->getOrder();
-    $order_items = $order->getItems();
-    $order_item = reset($order_items);
-    $order_item->setUnitPrice(new Price($amount, 'USD'), TRUE);
-    $order_item->save();
-    $order->recalculateTotalPrice();
-    $order->save();
+    // If we use coverage pricing update order.
+    if ($form_state->getValue('field_coverage_type')) {
+      $amount = $request_manager->getDocRequestFee($doc_request, $form_state->getValue('field_coverage_type')[0]['target_id']);
+      $order = $doc_request->getOrder();
+      $order_items = $order->getItems();
+      $order_item = reset($order_items);
+      $order_item->setUnitPrice(new Price($amount, 'USD'), TRUE);
+      $order_item->save();
+      $order->recalculateTotalPrice();
+      $order->save();
+    }
     $request_manager->performPayment($doc_request);
   }
   // Redirect.
@@ -196,4 +199,36 @@ function pd_request_views_pre_render(ViewExecutable $view) {
     $view->element['#attached']['library'][] = 'pd_request/documents';
     $view->element['#attached']['drupalSettings']['pd_request']['refresh_path'] = Url::fromRoute('pd_request.documents_refresh')->toString();
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function pd_request_form_comment_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $form['actions']['submit']['#value'] = t('Send message');
+  $form['actions']['submit']['#submit'][] = 'pd_request_form_comment_form_submit';
+}
+
+/**
+ * Custom submit handler for comments.
+ */
+function pd_request_form_comment_form_submit($form, FormStateInterface $form_state) {
+  $current_user = \Drupal::currentUser();
+  $comment = $form_state->getFormObject()->getEntity();
+  $doc_request = $comment->getCommentedEntity();
+
+  if (in_array('employee', $current_user->getRoles())) {
+    $doc_request->set('field_workflow', DocRequestStateManager::STATE_DISPUTED);
+    $doc_request->save();   
+    $form_state->setRedirect('view.doc_requests.page_1');
+  }
+  else if (in_array('vendor', $current_user->getRoles())) {
+    $doc_request->set('field_workflow', DocRequestStateManager::STATE_DISPUTE);
+    $doc_request->save();   
+    $form_state->setRedirect('eck.entity.add', [
+      'eck_entity_type' => 'doc_request',
+      'eck_entity_bundle' => 'doc_request',
+    ]);
+  }
+  
 }
