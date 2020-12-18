@@ -8,5 +8,5 @@ id: doc_request_pending
 label: Pending
 module: workflow
 wid: doc_request
-weight: -8
+weight: -9
 sysid: 0

@@ -7,6 +7,7 @@ label: Employee
 weight: 3
 is_admin: null
 permissions:
+  - 'access comments'
   - 'access commerce administration pages'
   - 'access commerce_order overview'
   - 'access devel information'
@@ -34,7 +35,9 @@ permissions:
   - payment.payment_method_configuration.update.own
   - payment.payment_method_configuration.view.any
   - payment.payment_method_configuration.view.own
+  - 'post comments'
   - 'rabbit hole bypass user'
+  - 'skip comment approval'
   - 'update any coverage profile'
   - 'update any documents profile'
   - 'update any vendor profile'

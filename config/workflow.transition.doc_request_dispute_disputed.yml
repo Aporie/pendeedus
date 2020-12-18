@@ -1,0 +1,17 @@
+uuid: 5ed32d73-3b93-479a-a6cf-0c4a96215f46
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_dispute
+    - workflow.state.doc_request_disputed
+id: doc_request_dispute_disputed
+label: null
+module: workflow
+from_sid: doc_request_dispute
+to_sid: doc_request_disputed
+roles:
+  employee: employee
+  workflow_author: '0'
+  vendor: '0'
+  administrator: '0'

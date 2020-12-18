@@ -1,0 +1,17 @@
+uuid: a626fa5d-ee10-486b-ac4b-99c3bc50c2e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_charged
+    - workflow.state.doc_request_dispute
+id: doc_request_dispute_charged
+label: null
+module: workflow
+from_sid: doc_request_dispute
+to_sid: doc_request_charged
+roles:
+  workflow_author: '0'
+  vendor: '0'
+  employee: '0'
+  administrator: '0'

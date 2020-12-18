@@ -1,0 +1,23 @@
+uuid: b8224e2e-7cf8-4984-a2ab-9f4570c23df3
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.dispute
+    - field.field.comment.dispute.comment_body
+  module:
+    - text
+id: comment.dispute.default
+targetEntityType: comment
+bundle: dispute
+mode: default
+content:
+  comment_body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  links: true

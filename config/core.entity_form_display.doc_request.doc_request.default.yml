@@ -8,6 +8,7 @@ dependencies:
     - field.field.doc_request.doc_request.field_area
     - field.field.doc_request.doc_request.field_book
     - field.field.doc_request.doc_request.field_coverage_type
+    - field.field.doc_request.doc_request.field_dispute
     - field.field.doc_request.doc_request.field_documents
     - field.field.doc_request.doc_request.field_email_copy_in_addition
     - field.field.doc_request.doc_request.field_footer
@@ -97,6 +98,7 @@ hidden:
   created: true
   field_additional_fee: true
   field_coverage_type: true
+  field_dispute: true
   field_documents: true
   field_not_available: true
   order: true

@@ -7,6 +7,7 @@ label: Vendor
 weight: 2
 is_admin: null
 permissions:
+  - 'access comments'
   - 'access devel information'
   - 'access doc_request workflow_transition form'
   - 'access kint'
@@ -24,6 +25,8 @@ permissions:
   - payment.payment_method_configuration.create.payment_authnet
   - payment.payment_method_configuration.update.own
   - payment.payment_method_configuration.view.own
+  - 'post comments'
+  - 'skip comment approval'
   - 'update own coverage profile'
   - 'update own documents profile'
   - 'update own vendor profile'

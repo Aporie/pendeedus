@@ -1,0 +1,22 @@
+uuid: c5a19d44-4421-4dea-9666-f3591985a708
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.compact
+    - field.field.user.user.commerce_remote_id
+  module:
+    - user
+id: user.user.compact
+targetEntityType: user
+bundle: user
+mode: compact
+content: {  }
+hidden:
+  commerce_remote_id: true
+  coverage_profiles: true
+  customer_profiles: true
+  documents_profiles: true
+  member_for: true
+  realname: true
+  vendor_profiles: true

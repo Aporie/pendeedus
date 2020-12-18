@@ -1,0 +1,17 @@
+uuid: 509aea61-ab3a-4e49-8f79-4cfb3f0d8956
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_dispute
+    - workflow.state.doc_request_pending
+id: doc_request_dispute_pending
+label: null
+module: workflow
+from_sid: doc_request_dispute
+to_sid: doc_request_pending
+roles:
+  workflow_author: '0'
+  vendor: '0'
+  employee: '0'
+  administrator: '0'

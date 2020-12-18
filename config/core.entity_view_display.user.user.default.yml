@@ -11,20 +11,20 @@ targetEntityType: user
 bundle: user
 mode: default
 content:
-  documents_profiles:
+  customer_profiles:
     type: entity_reference_entity_view
-    weight: 1
+    weight: 0
     region: content
-    label: hidden
+    label: above
     settings:
       link: true
       view_mode: default
     third_party_settings: {  }
-  vendor_profiles:
+  documents_profiles:
     type: entity_reference_entity_view
-    weight: 0
+    weight: 1
     region: content
-    label: hidden
+    label: above
     settings:
       link: true
       view_mode: default
@@ -32,6 +32,6 @@ content:
 hidden:
   commerce_remote_id: true
   coverage_profiles: true
-  customer_profiles: true
   member_for: true
   realname: true
+  vendor_profiles: true

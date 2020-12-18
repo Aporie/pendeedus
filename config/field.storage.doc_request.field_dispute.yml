@@ -1,0 +1,20 @@
+uuid: 8d724bc5-ba70-4073-9fdd-c57398734785
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - eck
+id: doc_request.field_dispute
+field_name: field_dispute
+entity_type: doc_request
+type: comment
+settings:
+  comment_type: dispute
+module: comment
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

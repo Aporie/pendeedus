@@ -1,0 +1,25 @@
+uuid: bb63d271-ae6e-4476-8936-49c211725aa9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.address
+    - profile.type.vendor
+  module:
+    - address
+id: profile.vendor.address
+field_name: address
+entity_type: profile
+bundle: vendor
+label: Address
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: null
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides: {  }
+  fields: {  }
+field_type: address

@@ -1,0 +1,21 @@
+uuid: 877aaa3b-9e28-4b27-b761-9eb732419875
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.dispute
+    - field.storage.comment.comment_body
+  module:
+    - text
+id: comment.dispute.comment_body
+field_name: comment_body
+entity_type: comment
+bundle: dispute
+label: Message
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,17 @@
+uuid: 4f1c5e14-c6cb-4e0b-a82b-fa288a6995c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_dispute
+    - workflow.state.doc_request_not_available
+id: doc_request_not_available_dispute
+label: null
+module: workflow
+from_sid: doc_request_not_available
+to_sid: doc_request_dispute
+roles:
+  workflow_author: '0'
+  vendor: '0'
+  employee: '0'
+  administrator: '0'

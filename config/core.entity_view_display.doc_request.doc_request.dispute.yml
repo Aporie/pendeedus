@@ -1,0 +1,136 @@
+uuid: 0abeb472-2fb1-4561-8093-76b8c151afc5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.dispute.default
+    - core.entity_view_mode.doc_request.dispute
+    - eck.eck_type.doc_request.doc_request
+    - field.field.doc_request.doc_request.field_additional_fee
+    - field.field.doc_request.doc_request.field_area
+    - field.field.doc_request.doc_request.field_book
+    - field.field.doc_request.doc_request.field_coverage_type
+    - field.field.doc_request.doc_request.field_dispute
+    - field.field.doc_request.doc_request.field_documents
+    - field.field.doc_request.doc_request.field_email_copy_in_addition
+    - field.field.doc_request.doc_request.field_footer
+    - field.field.doc_request.doc_request.field_instrument
+    - field.field.doc_request.doc_request.field_not_available
+    - field.field.doc_request.doc_request.field_note
+    - field.field.doc_request.doc_request.field_page
+    - field.field.doc_request.doc_request.field_workflow
+  module:
+    - comment
+    - commerce_price
+    - file
+id: doc_request.doc_request.dispute
+targetEntityType: doc_request
+bundle: doc_request
+mode: dispute
+content:
+  created:
+    label: hidden
+    type: timestamp
+    weight: 1
+    region: content
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  field_additional_fee:
+    type: number_decimal
+    weight: 9
+    region: content
+    label: inline
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+  field_area:
+    weight: 2
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_book:
+    weight: 4
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_dispute:
+    weight: 10
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  field_documents:
+    weight: 8
+    label: inline
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+  field_email_copy_in_addition:
+    weight: 7
+    label: inline
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+  field_instrument:
+    weight: 3
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_note:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_page:
+    weight: 5
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  price:
+    label: inline
+    type: commerce_price_default
+    weight: 0
+    region: content
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+hidden:
+  changed: true
+  field_coverage_type: true
+  field_footer: true
+  field_not_available: true
+  field_workflow: true
+  order: true
+  sku: true
+  stores: true
+  uid: true

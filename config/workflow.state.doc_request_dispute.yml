@@ -1,0 +1,12 @@
+uuid: 5d423b36-ca56-4dfc-bb27-397e855a7609
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.workflow.doc_request
+id: doc_request_dispute
+label: 'In dispute'
+module: workflow
+wid: doc_request
+weight: -4
+sysid: 0

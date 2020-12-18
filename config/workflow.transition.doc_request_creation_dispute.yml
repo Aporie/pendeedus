@@ -1,0 +1,17 @@
+uuid: 2766ff57-e90e-48c6-b892-bf6d54c0b314
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_creation
+    - workflow.state.doc_request_dispute
+id: doc_request_creation_dispute
+label: null
+module: workflow
+from_sid: doc_request_creation
+to_sid: doc_request_dispute
+roles:
+  workflow_author: '0'
+  vendor: '0'
+  employee: '0'
+  administrator: '0'

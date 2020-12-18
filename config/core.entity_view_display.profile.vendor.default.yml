@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.profile.vendor.address
     - field.field.profile.vendor.field_address
     - field.field.profile.vendor.field_area
     - profile.type.vendor
@@ -13,6 +14,13 @@ targetEntityType: profile
 bundle: vendor
 mode: default
 content:
+  address:
+    label: hidden
+    type: address_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_address:
     weight: 0
     label: above

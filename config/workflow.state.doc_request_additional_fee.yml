@@ -8,5 +8,5 @@ id: doc_request_additional_fee
 label: 'Additional fee'
 module: workflow
 wid: doc_request
-weight: -5
+weight: -6
 sysid: 0

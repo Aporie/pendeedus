@@ -1,0 +1,12 @@
+uuid: 45e4aa6c-8824-4b28-a857-8e7b9387022a
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_dispute
+id: doc_request_dispute_dispute
+label: null
+module: workflow
+from_sid: doc_request_dispute
+to_sid: doc_request_dispute
+roles: {  }

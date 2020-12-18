@@ -1,0 +1,10 @@
+uuid: 9c879aca-8ac7-4b2a-afee-2c9772ce0a7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - eck
+id: doc_request.dispute
+label: Dispute
+targetEntityType: doc_request
+cache: true

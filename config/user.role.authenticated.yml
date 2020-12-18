@@ -9,12 +9,15 @@ label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
+  - 'access comments'
   - 'access content'
   - 'access devel information'
   - 'access kint'
   - 'execute php code'
   - 'manage document commerce_order_item'
   - 'manage own commerce_payment_method'
+  - 'post comments'
+  - 'skip comment approval'
   - 'view commerce_store'
   - 'view document_request commerce_order'
   - 'view online commerce_store'

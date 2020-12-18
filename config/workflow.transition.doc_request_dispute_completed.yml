@@ -1,0 +1,17 @@
+uuid: 350f13b3-2d6b-4274-abf9-2079af0b65da
+langcode: en
+status: true
+dependencies:
+  config:
+    - workflow.state.doc_request_completed
+    - workflow.state.doc_request_dispute
+id: doc_request_dispute_completed
+label: null
+module: workflow
+from_sid: doc_request_dispute
+to_sid: doc_request_completed
+roles:
+  workflow_author: '0'
+  vendor: '0'
+  employee: '0'
+  administrator: '0'

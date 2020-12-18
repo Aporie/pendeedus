@@ -8,5 +8,5 @@ id: doc_request_completed
 label: Completed
 module: workflow
 wid: doc_request
-weight: -6
+weight: -7
 sysid: 0

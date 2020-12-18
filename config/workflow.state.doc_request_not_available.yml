@@ -8,5 +8,5 @@ id: doc_request_not_available
 label: 'Not Available'
 module: workflow
 wid: doc_request
-weight: -7
+weight: -8
 sysid: 0
