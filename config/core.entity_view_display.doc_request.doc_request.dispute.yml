@@ -31,7 +31,7 @@ content:
   created:
     label: hidden
     type: timestamp
-    weight: 1
+    weight: 2
     region: content
     settings:
       date_format: medium
@@ -40,7 +40,7 @@ content:
     third_party_settings: {  }
   field_additional_fee:
     type: number_decimal
-    weight: 9
+    weight: 1
     region: content
     label: inline
     settings:
@@ -50,15 +50,15 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
   field_area:
-    weight: 2
-    label: inline
+    weight: 3
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
   field_book:
-    weight: 4
+    weight: 5
     label: inline
     settings:
       link_to_entity: false
@@ -75,7 +75,7 @@ content:
     type: comment_default
     region: content
   field_documents:
-    weight: 8
+    weight: 9
     label: inline
     settings:
       use_description_as_link_text: true
@@ -83,7 +83,7 @@ content:
     type: file_default
     region: content
   field_email_copy_in_addition:
-    weight: 7
+    weight: 8
     label: inline
     settings:
       format: default
@@ -93,7 +93,7 @@ content:
     type: boolean
     region: content
   field_instrument:
-    weight: 3
+    weight: 4
     label: inline
     settings:
       link_to_entity: false
@@ -101,14 +101,14 @@ content:
     type: string
     region: content
   field_note:
-    weight: 6
+    weight: 7
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_page:
-    weight: 5
+    weight: 6
     label: inline
     settings:
       link_to_entity: false

@@ -1,0 +1,40 @@
+uuid: fcd78d39-f94c-49ed-8195-808584ec7899
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.user.commerce_remote_id
+  module:
+    - path
+    - user
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  account:
+    weight: -10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  language:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  timezone:
+    weight: 6
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  commerce_remote_id: true
+  customer_profiles: true
+  documents_profiles: true
+  vendor_profiles: true

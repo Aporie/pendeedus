@@ -27,14 +27,14 @@ mode: process
 content:
   field_additional_fee:
     type: number
-    weight: 1
+    weight: 2
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_documents:
     type: file_generic
-    weight: 2
+    weight: 1
     region: content
     settings:
       progress_indicator: throbber

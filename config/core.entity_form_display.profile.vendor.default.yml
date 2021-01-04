@@ -4,30 +4,25 @@ status: true
 dependencies:
   config:
     - field.field.profile.vendor.address
-    - field.field.profile.vendor.field_address
     - field.field.profile.vendor.field_area
+    - field.field.profile.vendor.field_phone_number
     - profile.type.vendor
   module:
     - address
+    - telephone
 id: profile.vendor.default
 targetEntityType: profile
 bundle: vendor
 mode: default
 content:
   address:
-    type: address_default
-    weight: 28
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  field_address:
-    weight: 26
-    settings: {  }
-    third_party_settings: {  }
     type: address_container
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
     region: content
   field_area:
-    weight: 27
+    weight: 0
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -35,6 +30,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_phone_number:
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
     region: content
 hidden:
   is_default: true

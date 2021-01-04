@@ -19,3 +19,14 @@
     border-left: 1.24em solid $light;
   }
 }
+.field--name-field-dispute {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+
+  .comment-form {
+    .js-form-item-comment-body-0-value label {
+      display: none;
+    }
+  }
+}

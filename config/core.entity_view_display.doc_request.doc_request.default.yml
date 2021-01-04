@@ -30,7 +30,7 @@ bundle: doc_request
 mode: default
 content:
   created:
-    label: hidden
+    label: inline
     type: timestamp
     weight: 3
     region: content
@@ -159,7 +159,7 @@ content:
       currency_display: symbol
     third_party_settings: {  }
   uid:
-    label: hidden
+    label: inline
     type: author
     weight: 0
     region: content

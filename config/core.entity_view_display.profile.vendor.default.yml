@@ -4,8 +4,8 @@ status: true
 dependencies:
   config:
     - field.field.profile.vendor.address
-    - field.field.profile.vendor.field_address
     - field.field.profile.vendor.field_area
+    - field.field.profile.vendor.field_phone_number
     - profile.type.vendor
   module:
     - address
@@ -21,13 +21,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_address:
-    weight: 0
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: address_default
-    region: content
   field_area:
     weight: 1
     label: above
@@ -35,5 +28,12 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_phone_number:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
 hidden: {  }

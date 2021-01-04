@@ -55,6 +55,10 @@ a {
     margin: 0 15px;
 }
 
+.highlight {
+    background-color: #f7f7f9;
+}
+
 @import "custom/fonts";
 @import "custom/variables";
 @import "custom/navbar";
@@ -68,5 +72,5 @@ a {
 @import "custom/page__services";
 @import "custom/page__contact";
 @import "custom/page__documents";
-@import "custom/comments"
-
+@import "custom/comments";
+@import "custom/doc_request";

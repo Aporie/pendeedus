@@ -5,6 +5,7 @@ namespace Drupal\pd_request;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\user\Entity\User;
 use Drupal\pd_coverage\CoverageAreaPriceManagerInterface;
 use Drupal\pd_request\Controller\ViewDocumentsRefreshController;
 use Drupal\pd_request\Entity\DocRequest;
@@ -112,18 +113,31 @@ class RequestManager implements RequestManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getUserPaymentMethod(User $user) {
+    $payment_methods = $this->entityTypeManager->getStorage('commerce_payment_method')->loadByProperties([
+      'uid' => $user->id(),
+      'reusable' => TRUE,
+    ]);
+    // @TODO select default payment method.
+    /** @var \Drupal\commerce_payment\Entity\PaymentMethodInterface $payment_method */
+    $payment_method = reset($payment_methods);
+    if (!$payment_method || $payment_method->isExpired()) {
+      return FALSE;
+    }
+
+    return $payment_method;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function performPayment(DocRequest $doc_request) {
     $order = $doc_request->getOrder();
     $payment_gateway = $this->entityTypeManager->getStorage('commerce_payment_gateway')->load('pendeedus');
 
     // Get doc request author and payment method.
-    $user_uid = $order->getCustomerId();
-    $payment_methods = $this->entityTypeManager->getStorage('commerce_payment_method')->loadByProperties([
-      'uid' => $user_uid,
-      'reusable' => TRUE,
-    ]);
-    // @TODO select default payment method.
-    $payment_method = reset($payment_methods);
+    $user = $order->getCustomer();
+    $payment_method = $this->getUserPaymentMethod($user);
 
     // Execute payment.
     /** @var Drupal\commerce_authnet\Plugin\Commerce\PaymentGateway\AcceptJs $authnet */
@@ -137,9 +151,10 @@ class RequestManager implements RequestManagerInterface {
       'expires' => 0,
       'state' => 'new',
       'amount' => $order->getTotalPrice(),
-      'uid' => $user_uid,
+      'uid' => $user->id(),
     ]);
     $payment->save();
+
     $authnet->createPayment($payment);
     // Set payment and order as completed.
     $payment->setState('completed');

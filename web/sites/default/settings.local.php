@@ -3,7 +3,7 @@
 $databases['default']['default'] = array(
   'database' => 'admin_pendeedus',
   'username' => 'admin_pendeedus',
-  'password' => 'TvplOKR3oQKzq6IW',
+  'password' => 'rOVN2hxgSqduz8VS',
   'prefix' => '',
   'host' => '127.0.0.1',
   'port' => '3306',

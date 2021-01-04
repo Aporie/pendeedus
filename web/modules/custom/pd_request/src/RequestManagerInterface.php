@@ -4,6 +4,7 @@ namespace Drupal\pd_request;
 
 use Drupal\pd_request\Entity\DocRequest;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\Entity\User;
 
 /**
  * Provides an interface for request page service.
@@ -35,6 +36,17 @@ interface RequestManagerInterface {
   public function createOrder(DocRequest $doc_request);
 
   /**
+   * Assert user payment method before loading it.
+   * 
+   * @param \Drupal\user\Entity\User $user
+   *  The request.
+   * 
+   * @return mixed 
+   *  The payment method if validated. False, otherwise.
+   */
+  public function getUserPaymentMethod(User $user);
+
+  /**
    * Perform a payment operation.
    * 
    * @param \Drupal\pd_request\Entity\DocRequest $doc_request
@@ -51,4 +63,5 @@ interface RequestManagerInterface {
    *  The doc request entity.
    */
   public function payAdditionalFee(Request $request, DocRequest $doc_request);
+
 }

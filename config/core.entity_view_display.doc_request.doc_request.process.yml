@@ -28,9 +28,9 @@ bundle: doc_request
 mode: process
 content:
   created:
-    label: inline
+    label: hidden
     type: timestamp
-    weight: 3
+    weight: 4
     region: content
     settings:
       date_format: medium
@@ -38,8 +38,8 @@ content:
       timezone: ''
     third_party_settings: {  }
   field_area:
-    weight: 4
-    label: inline
+    weight: 0
+    label: hidden
     settings:
       display: all
       wrap: none
@@ -77,7 +77,7 @@ content:
     region: content
   field_note:
     weight: 8
-    label: inline
+    label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
@@ -92,25 +92,25 @@ content:
     region: content
   order:
     type: entity_reference_label
-    weight: 1
+    weight: 2
     region: content
-    label: inline
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
   price:
-    label: inline
+    label: hidden
     type: commerce_price_default
-    weight: 2
+    weight: 3
     region: content
     settings:
       strip_trailing_zeroes: false
       currency_display: symbol
     third_party_settings: {  }
   uid:
-    label: inline
+    label: hidden
     type: author
-    weight: 0
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }

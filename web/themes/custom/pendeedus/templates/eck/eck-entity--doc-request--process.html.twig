@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display an ECK entity.
+ *
+ * Available variables:
+ * - eck_entity: The full ECK entity with limited access to object properties
+ *   and methods. Only "getter" methods (method names starting with "get",
+ *   "has", or "is") and a few common methods such as "id" and "label" are
+ *   available. Calling other methods (such as node.delete) will result in an
+ *   exception.
+ * - content: All ECK entity items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_eck_entity()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+'eck-entity',
+] %}
+<div{{ attributes.addClass(classes) }}>
+    <div class="row mb-2">
+        <div class="area col-12 text-center mb-2"><h5>{{ content.field_area }}</h5></div>
+        <div class="col-6">
+            <div class="created">{{ content.created }}</div>
+            <div class="order d-flex">{{ content.order }}</div>
+            <div class="price">{{ content.price }}</div>
+        </div>
+        <div class="col-6 text-right">
+            <div class="company-name">{{ address.organization }}</div>
+            <div class="name">{{ address.given_name }} {{ address.family_name }}</div>
+            <div class="username">{{ content.uid }}</div>
+            <div class="phone-number">{{ phone_number }}</div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12 highlight pt-2 pb-2">
+            {{ content.field_email_copy_in_addition }}
+            {{ content.field_instrument }}
+            {{ content.field_book }}
+            {{ content.field_page }}
+            {{ content.field_note }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="area col-12 text-center mb-2"><h5>{{ 'Document'|t }}</h5></div>
+        <div class="col-12">
+            {{ content|without('order', 'uid', 'price', 'created', 'field_area', 'field_email_copy_in_addition', 'field_instrument', 'field_book', 'field_page', 'field_note') }}
+        </div>
+    </div>
+</div>

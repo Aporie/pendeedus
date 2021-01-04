@@ -807,7 +807,7 @@ $settings['default_content_deploy_content_directory'] = '../content';
 
 $settings['skip_permissions_hardening'] = TRUE;
 
-$config['nodejs.config']['service_key'] = 'wepc425ppwu4';
+$config['nodejs.config']['service_key'] = 'rOVN2hxgSqduz8VS';
 
 $config['nodejs.config']['pages'] = '*';
 $config['nodejs.config']['authenticated_users_only'] = TRUE;

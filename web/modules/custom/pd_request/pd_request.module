@@ -4,6 +4,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\commerce_order\Adjustment;
 use Drupal\commerce_price\Price;
+use Drupal\user\Entity\User;
 use Drupal\pd_request\DocRequestStateManager;
 use Drupal\views\ViewExecutable;
 
@@ -130,9 +131,14 @@ function pd_request_form_doc_request_doc_request_process_form_alter(&$form, \Dru
  * Custom validation handler.
  */
 function pd_request_form_doc_request_doc_request_process_form_validate($form, FormStateInterface $form_state) {
+  $doc_request = $form_state->getFormObject()->getEntity();
   // Not allow to request more fee and add a document.
   if ($form_state->getValue('field_additional_fee')[0]['value'] && empty($form_state->getValue('field_documents')[0]['fids'])) {
     $form_state->setError($form['field_additional_fee'], 'Please upload a document before saving.');
+  }
+  // Validate user payment method.
+  if (!\Drupal::service('pd_request.request_manager')->getUserPaymentMethod($doc_request->getOwner())) {
+    $form_state->setError($form, 'User payment method is expired.');
   }
 }
 
@@ -162,10 +168,10 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
   // Perform payment transaction.
   else if (!empty($form_state->getValue('field_documents')[0]['fids'])) {
     $request_manager = \Drupal::service('pd_request.request_manager');
+    $order = $doc_request->getOrder();
     // If we use coverage pricing update order.
     if ($form_state->getValue('field_coverage_type')) {
       $amount = $request_manager->getDocRequestFee($doc_request, $form_state->getValue('field_coverage_type')[0]['target_id']);
-      $order = $doc_request->getOrder();
       $order_items = $order->getItems();
       $order_item = reset($order_items);
       $order_item->setUnitPrice(new Price($amount, 'USD'), TRUE);
@@ -173,7 +179,9 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
       $order->recalculateTotalPrice();
       $order->save();
     }
-    $request_manager->performPayment($doc_request);
+    if (!$order->isPaid()) {
+      $request_manager->performPayment($doc_request);
+    }
   }
   // Redirect.
   $callback_object = $form_state->getBuildInfo()['callback_object'];
@@ -181,6 +189,16 @@ function pd_request_form_doc_request_doc_request_process_form_submit($form, Form
     'query' => ['doc_request' => $callback_object->getEntity()->id(),
     ],
   ]);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function pd_request_preprocess_eck_entity__doc_request__process(&$variables) {
+  $user = $variables['eck_entity']->getOwner();
+  $profile = \Drupal::entityTypeManager()->getStorage('profile')->loadByUser($user, 'vendor');
+  $variables['phone_number'] = $profile->get('field_phone_number')->value;
+  $variables['address'] = $profile->get('address')->first()->getValue();
 }
 
 /**
